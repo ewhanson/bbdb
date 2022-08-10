@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/labstack/echo/v5"
+	"github.com/pocketbase/pocketbase/apis"
 	"log"
 
-	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	app.OnFileDownloadRequest().Add(func(e *core.FileDownloadEvent) error {
 		// Add cache control headers for image caching
 		// TODO: Specify that cache headers should only apply to images
-		e.HttpContext.Response().Header().Set("Cache-Control", "public, max-age=432000")
+		e.HttpContext.Response().Header().Set("Cache-Control", "public, max-age=31536000")
 		return nil
 	})
 
