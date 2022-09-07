@@ -1,3 +1,4 @@
 pb_data
 # Pocketbase binary
-bbdb
+bbdb*
+app.env
