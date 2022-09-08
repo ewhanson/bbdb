@@ -16,6 +16,10 @@ func Init(app *pocketbase.PocketBase) {
 	setupImageHeaders(app)
 	setupNewPhotoNotifications(app, sns)
 	setupSubscribeRecordAction(app, sns)
+	addRoutes(app)
+}
+
+func addRoutes(app *pocketbase.PocketBase) {
 	setupSubscriptionRoutes(app)
 	setupApiVersionRoute(app)
 }
