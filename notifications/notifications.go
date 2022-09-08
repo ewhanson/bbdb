@@ -73,7 +73,7 @@ func (sns *ScheduledNotifications) dispatchNotifications(app *pocketbase.PocketB
 }
 
 func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, userId string) error {
-	m, err := mailer.New([]string{emailAddress}, "📫 Welcome to Babygramz updates")
+	m, err := mailer.New([]string{emailAddress}, "Welcome to Babygramz updates")
 	if err != nil {
 		return err
 	}
@@ -104,7 +104,7 @@ func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, userId 
 
 // sendUpdateEmail fires off email via SMTP
 func (sns *ScheduledNotifications) sendUpdateEmail(emailAddress string, userId string) error {
-	m, err := mailer.New([]string{emailAddress}, "📸 New photos available!")
+	m, err := mailer.New([]string{emailAddress}, "New photos available!")
 	if err != nil {
 		return err
 	}

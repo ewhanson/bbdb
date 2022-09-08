@@ -1,6 +1,10 @@
 package appconfig
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+	"log"
+	"os"
+)
 
 type Config struct {
 	ChronInterval string `mapstructure:"CHRON_INTERVAL"`
@@ -12,8 +16,12 @@ type Config struct {
 	APIVersion    string `mapstructure:"API_VERSION"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
-	viper.AddConfigPath(path)
+func LoadConfig() (config Config, err error) {
+	pwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	viper.AddConfigPath(pwd)
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
 
