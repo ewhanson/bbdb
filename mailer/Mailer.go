@@ -24,7 +24,11 @@ type Mailer struct {
 
 // New populates Mailer struct with initial data.
 func New(to []string, subject string) (*Mailer, error) {
-	config, err := appConfig.LoadConfig(".")
+	configDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	config, err := appConfig.LoadConfig(configDir)
 	if err != nil {
 		return nil, errors.New("could not initialize appConfig")
 	}

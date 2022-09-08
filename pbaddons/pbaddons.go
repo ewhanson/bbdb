@@ -8,6 +8,7 @@ import (
 	"github.com/pocketbase/pocketbase/core"
 	"log"
 	"net/http"
+	"os"
 )
 
 // Init adds custom logic to PocketBase app
@@ -25,7 +26,11 @@ func addRoutes(app *pocketbase.PocketBase) {
 }
 
 func initNotifications(app *pocketbase.PocketBase) *notifications.ScheduledNotifications {
-	config, err := appConfig.LoadConfig(".")
+	configDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	config, err := appConfig.LoadConfig(configDir)
 	if err != nil {
 		log.Fatal("Cannot load app config:", err)
 	}
@@ -103,7 +108,15 @@ func setupSubscriptionRoutes(app *pocketbase.PocketBase) {
 }
 
 func setupApiVersionRoute(app *pocketbase.PocketBase) {
-	config, _ := appConfig.LoadConfig(".")
+	configDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	config, err := appConfig.LoadConfig(configDir)
+	if err != nil {
+		log.Fatal("Cannot load app config:", err)
+	}
+
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		_, err := e.Router.AddRoute(echo.Route{
 			Method: "GET",
