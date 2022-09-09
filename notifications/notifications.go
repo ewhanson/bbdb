@@ -82,7 +82,7 @@ func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, userId 
 		"Welcome! 👋",
 		"",
 		"You are receiving this because you signed up to receive notification emails from Babygramz.",
-		"You will receive an email update, once a day, whenever new photos are available",
+		"You will receive an email update, once a day, whenever new photos are available.",
 		"",
 		"---",
 		"",
@@ -90,7 +90,7 @@ func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, userId 
 	})
 	m.AddHtmlMsg([]string{
 		"<html><body style=\"font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\">",
-		"<h1>Welcome! 👋</h1><p>You are receiving this because you signed up to receive notification emails from <a href=\"https://babygramz.com\">Babygramz</a>.</p><p>You will receive an email update, once per day, whenever new photos are available</p>",
+		"<h1>Welcome! 👋</h1><p>You are receiving this because you signed up to receive notification emails from <a href=\"https://babygramz.com\">Babygramz</a>.</p><p>You will receive an email update, once per day, whenever new photos are available.</p>",
 		getHtmlFooter(userId),
 		"</body></html>",
 	})
