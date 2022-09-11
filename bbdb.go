@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	log.Print("Starting BBDB...")
 	app := pocketbase.New()
 
 	pbaddons.Init(app)

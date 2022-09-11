@@ -1,34 +1,39 @@
 package notifications
 
 import (
-	"context"
 	appConfig "github.com/ewhanson/bbdb/config"
 	"github.com/ewhanson/bbdb/mailer"
+	"github.com/go-co-op/gocron"
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/models"
-	"github.com/procyon-projects/chrono"
 	"log"
+	"time"
 )
 
 // ScheduledNotifications defines group of methods for tracking and sending
 // grouped email notifications on updated content
 type ScheduledNotifications struct {
-	taskScheduler chrono.TaskScheduler
-	shouldNotify  bool
-	chronInterval string
-	config        *appConfig.Config
+	scheduler    *gocron.Scheduler
+	shouldNotify bool
+	config       *appConfig.Config
 }
 
 // New runs initial setup for ScheduledNotifications and set up scheduled tasks
 func New(app *pocketbase.PocketBase, config *appConfig.Config) *ScheduledNotifications {
-	sns := &ScheduledNotifications{
-		chronInterval: config.ChronInterval,
-		taskScheduler: chrono.NewDefaultTaskScheduler(),
-		config:        config,
+	// TODO: Use UTC if no time specified
+	localLocation, err := time.LoadLocation(config.LocalLocation)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	_, err := sns.taskScheduler.ScheduleWithCron(func(ctx context.Context) {
+	sns := &ScheduledNotifications{
+		scheduler: gocron.NewScheduler(localLocation),
+		config:    config,
+	}
+
+	_, err = sns.scheduler.Every(1).Day().At(config.NotificationTime).Do(func() {
+		log.Print("Running scheduled task")
 		if sns.shouldNotify {
 			err := sns.dispatchNotifications(app)
 			if err != nil {
@@ -36,11 +41,12 @@ func New(app *pocketbase.PocketBase, config *appConfig.Config) *ScheduledNotific
 				return
 			}
 		}
-	}, sns.chronInterval, chrono.WithLocation("America/Vancouver"))
-
+	})
 	if err != nil {
-		log.Fatal("Could not setup task scheduler:", err)
+		return nil
 	}
+
+	sns.scheduler.StartAsync()
 
 	return sns
 }
@@ -52,6 +58,7 @@ func (sns *ScheduledNotifications) SetUpdateAvailable() {
 
 // dispatchNotifications gets a list of all subscribed email addresses and dispatches a notification email
 func (sns *ScheduledNotifications) dispatchNotifications(app *pocketbase.PocketBase) error {
+	log.Print("Dispatching notifications")
 	collection, err := app.Dao().FindCollectionByNameOrId("subscribers")
 	if err != nil {
 		return err
@@ -64,6 +71,7 @@ func (sns *ScheduledNotifications) dispatchNotifications(app *pocketbase.PocketB
 	}
 	records := models.NewRecordsFromNullStringMaps(collection, rows)
 	for _, record := range records {
+		log.Print("Emailing" + record.GetStringDataValue("email"))
 		_ = sns.sendUpdateEmail(record.GetStringDataValue("email"), record.GetId())
 	}
 
