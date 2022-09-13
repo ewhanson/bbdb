@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/rwcarlsen/goexif/exif"
 	"log"
 	"net/http"
 )
@@ -17,6 +18,7 @@ func Init(app *pocketbase.PocketBase) {
 	setupNewPhotoNotifications(app, sns)
 	setupSubscribeRecordAction(app, sns)
 	addRoutes(app)
+	getPhotoExifDataBeforeCreate(app)
 }
 
 func addRoutes(app *pocketbase.PocketBase) {
@@ -119,6 +121,32 @@ func setupApiVersionRoute(app *pocketbase.PocketBase) {
 		if err != nil {
 			return err
 		}
+		return nil
+	})
+}
+
+func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
+	app.OnRecordBeforeCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+		if e.Record.Collection().Name != "photos" {
+			return nil
+		}
+
+		file, _, err := e.HttpContext.Request().FormFile("file")
+		if err != nil {
+			return err
+		}
+
+		metaData, err := exif.Decode(file)
+		if err != nil {
+			return err
+		}
+
+		dateTaken, err := metaData.DateTime()
+		if err != nil {
+			return err
+		}
+
+		e.Record.SetDataValue("dateTaken", dateTaken)
 		return nil
 	})
 }
