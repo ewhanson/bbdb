@@ -1,14 +1,21 @@
 package pbaddons
 
 import (
+	"fmt"
 	appConfig "github.com/ewhanson/bbdb/config"
 	"github.com/ewhanson/bbdb/notifications"
+	"github.com/ewhanson/bbdb/ui"
 	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/rwcarlsen/goexif/exif"
+	"io/fs"
 	"log"
 	"net/http"
+	"net/url"
+	"path/filepath"
+	"strings"
 )
 
 // Init adds custom logic to PocketBase app
@@ -24,6 +31,17 @@ func Init(app *pocketbase.PocketBase) {
 func addRoutes(app *pocketbase.PocketBase) {
 	setupSubscriptionRoutes(app)
 	setupApiVersionRoute(app)
+	bindStaticFrontendUI(app)
+}
+
+// bindStaticFrontendUI registers the endpoints that serve the static frontend UI.
+func bindStaticFrontendUI(app *pocketbase.PocketBase) {
+	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		// Serves static files from the ui/dist directory
+		e.Router.GET("/*", staticDirectoryHandler(ui.DistDirFS, false), middleware.Gzip())
+
+		return nil
+	})
 }
 
 func initNotifications(app *pocketbase.PocketBase) *notifications.ScheduledNotifications {
@@ -149,4 +167,34 @@ func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
 		e.Record.SetDataValue("dateTaken", dateTaken)
 		return nil
 	})
+}
+
+// StaticDirectoryHandler is similar to `apis.StaticDirectoryHandler`
+// but will fall back to index.html for SPA routing when returning a 404
+//
+// @see https://github.com/labstack/echo/issues/2211
+func staticDirectoryHandler(fileSystem fs.FS, disablePathUnescaping bool) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		p := c.PathParam("*")
+		if !disablePathUnescaping { // when router is already unescaping we do not want to do is twice
+			tmpPath, err := url.PathUnescape(p)
+			if err != nil {
+				return fmt.Errorf("failed to unescape path variable: %w", err)
+			}
+			p = tmpPath
+		}
+
+		// fs.FS.Open() already assumes that file names are relative to FS root path and considers name with prefix `/` as invalid
+		name := filepath.ToSlash(filepath.Clean(strings.TrimPrefix(p, "/")))
+
+		initialResult := c.FileFS(name, fileSystem)
+		if initialResult != nil {
+			secondResult := c.FileFS(".", fileSystem)
+			return secondResult
+		}
+
+		return initialResult
+
+		return initialResult
+	}
 }
