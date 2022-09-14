@@ -164,7 +164,7 @@ func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
 			return err
 		}
 
-		e.Record.SetDataValue("dateTaken", dateTaken)
+		e.Record.SetDataValue("dateTaken", dateTaken.UTC())
 		return nil
 	})
 }
@@ -172,7 +172,7 @@ func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
 // StaticDirectoryHandler is similar to `apis.StaticDirectoryHandler`
 // but will fall back to index.html for SPA routing when returning a 404
 //
-// @see https://github.com/labstack/echo/issues/2211
+// see apis.StaticDirectoryHandler for more info on code below
 func staticDirectoryHandler(fileSystem fs.FS, disablePathUnescaping bool) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		p := c.PathParam("*")
@@ -192,8 +192,6 @@ func staticDirectoryHandler(fileSystem fs.FS, disablePathUnescaping bool) echo.H
 			secondResult := c.FileFS(".", fileSystem)
 			return secondResult
 		}
-
-		return initialResult
 
 		return initialResult
 	}
