@@ -26,17 +26,20 @@ Build for Raspberry Pi
 
 Build for local dev
 ```bash
+git submodule update --init
 cd ui && npm run build
 cd .. && go build -o ./build/bbdb bbdb.go
 ```
 
 ```bash
+git submodule update --init
 cd ui && npm run build
 cd .. && env GOOS=linux GOARCH=arm GOARM=7 go build -o ./build/bbdb-linux-arm-7 bbdb.go 
 ```
 
 Build for server
 ```bash
+git submodule update --init
 cd ui && npm run build
 cd .. && env GOOS=linux GOARCH=amd64 go build -o ./build/bbdb-linux-amd64 bbdb.go
 ```
