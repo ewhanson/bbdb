@@ -5,3 +5,5 @@ build/
 app.env
 .env*
 build
+dist/
+pb_data
