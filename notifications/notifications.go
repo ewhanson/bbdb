@@ -86,7 +86,7 @@ func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, userId 
 			Address: sns.app.Settings().Meta.SenderAddress,
 		},
 		mail.Address{Address: emailAddress},
-		"Welcome to Babygramz updates",
+		"📫 Welcome to Babygramz updates",
 		body,
 		nil,
 	)
@@ -109,7 +109,7 @@ func (sns *ScheduledNotifications) sendUpdateEmail(emailAddress string, userId s
 			Address: sns.app.Settings().Meta.SenderAddress,
 		},
 		mail.Address{Address: emailAddress},
-		"New photos available!",
+		"📸 New photos available!",
 		body,
 		nil,
 	)
