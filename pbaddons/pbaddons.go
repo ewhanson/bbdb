@@ -2,7 +2,6 @@ package pbaddons
 
 import (
 	"fmt"
-	appConfig "github.com/ewhanson/bbdb/config"
 	"github.com/ewhanson/bbdb/notifications"
 	"github.com/ewhanson/bbdb/ui"
 	"github.com/labstack/echo/v5"
@@ -10,27 +9,46 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/rwcarlsen/goexif/exif"
+	"github.com/spf13/viper"
 	"io/fs"
-	"log"
 	"net/http"
 	"net/url"
 	"path/filepath"
 	"strings"
 )
 
+var Version string = "(Un-versioned)"
+
 // Init adds custom logic to PocketBase app
 func Init(app *pocketbase.PocketBase) {
-	sns := initNotifications(app)
+	extendRootCmd(app)
+
+	addRoutes(app)
 	setupImageHeaders(app)
+	getPhotoExifDataBeforeCreate(app)
+
+	sns := notifications.New(app)
 	setupNewPhotoNotifications(app, sns)
 	setupSubscribeRecordAction(app, sns)
-	addRoutes(app)
-	getPhotoExifDataBeforeCreate(app)
+}
+
+func extendRootCmd(app *pocketbase.PocketBase) {
+	app.RootCmd.Version = Version
+	app.RootCmd.Use = "bbdb"
+	app.RootCmd.Short = "bbdb CLI"
+
+	app.RootCmd.PersistentFlags().StringP(
+		"notificationTime",
+		"t",
+		"HH:mm",
+		"Time of day to send notification in HH:mm format")
+	_ = viper.BindPFlag("notificationTime", app.RootCmd.PersistentFlags().Lookup("notificationTime"))
+	// Should be 08:00 am Pacific time
+	viper.SetDefault("notificationTime", "15:00")
 }
 
 func addRoutes(app *pocketbase.PocketBase) {
 	setupSubscriptionRoutes(app)
-	setupApiVersionRoute(app)
 	bindStaticFrontendUI(app)
 }
 
@@ -44,16 +62,6 @@ func bindStaticFrontendUI(app *pocketbase.PocketBase) {
 	})
 }
 
-func initNotifications(app *pocketbase.PocketBase) *notifications.ScheduledNotifications {
-	config, err := appConfig.LoadConfig()
-	if err != nil {
-		log.Fatal("Cannot load app config: ", err)
-	}
-
-	// Add "photos added" email notifications
-	return notifications.New(app, &config)
-}
-
 func setupImageHeaders(app *pocketbase.PocketBase) {
 	// Add cache control headers for image caching
 	app.OnFileDownloadRequest().Add(func(e *core.FileDownloadEvent) error {
@@ -64,9 +72,6 @@ func setupImageHeaders(app *pocketbase.PocketBase) {
 }
 
 func setupNewPhotoNotifications(app *pocketbase.PocketBase, sns *notifications.ScheduledNotifications) {
-	// TODO: Remove before prod
-	//sns.SetUpdateAvailable()
-
 	app.OnModelAfterCreate().Add(func(e *core.ModelEvent) error {
 		if e.Model.TableName() == "photos" {
 			sns.SetUpdateAvailable()
@@ -114,27 +119,6 @@ func setupSubscriptionRoutes(app *pocketbase.PocketBase) {
 				return c.String(http.StatusOK, "Successfully unsubscribed")
 			},
 			Middlewares: nil,
-		})
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-}
-
-func setupApiVersionRoute(app *pocketbase.PocketBase) {
-	config, err := appConfig.LoadConfig()
-	if err != nil {
-		log.Fatal("Cannot load app config: ", err)
-	}
-
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
-		_, err := e.Router.AddRoute(echo.Route{
-			Method: "GET",
-			Path:   "/api/version",
-			Handler: func(c echo.Context) error {
-				return c.String(200, config.APIVersion)
-			},
 		})
 		if err != nil {
 			return err

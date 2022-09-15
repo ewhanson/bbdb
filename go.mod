@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/go-co-op/gocron v1.17.0
-	github.com/google/uuid v1.3.0
 	github.com/labstack/echo/v5 v5.0.0-20220201181537-ed2888cfa198
 	github.com/pocketbase/dbx v1.6.0
 	github.com/pocketbase/pocketbase v0.7.2
@@ -44,6 +43,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/google/wire v0.5.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.5.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
