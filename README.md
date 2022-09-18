@@ -10,7 +10,7 @@ VITE_VERSION=0.1.0
 
 ## Build Instructions
 
-For local dev, run
+For local dev, run the following. A `.env` file is required and should contain the same variables mentioned above.
 
 ```bash
 ./build.sh
