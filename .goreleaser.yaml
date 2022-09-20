@@ -25,7 +25,8 @@ builds:
       - goos: linux
         goarch: arm64
 archives:
-  - format: zip
+    - files:
+      - CHANGELOG*
 checksum:
   name_template: 'checksums.txt'
 snapshot:

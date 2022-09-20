@@ -7,3 +7,4 @@ app.env
 build
 dist/
 pb_data
+.secrets
