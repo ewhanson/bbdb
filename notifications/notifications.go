@@ -28,7 +28,6 @@ func New(app *pocketbase.PocketBase) *ScheduledNotifications {
 
 	notificationTime := viper.GetString("notificationTime")
 	_, err := sns.scheduler.Every(1).Day().At(notificationTime).Do(func() {
-		log.Print("Running scheduled task")
 		if sns.shouldNotify {
 			err := sns.dispatchNotifications(app)
 			if err != nil {
@@ -66,8 +65,8 @@ func (sns *ScheduledNotifications) dispatchNotifications(app *pocketbase.PocketB
 	}
 	records := models.NewRecordsFromNullStringMaps(collection, rows)
 	for _, record := range records {
-		log.Print("Emailing" + record.GetStringDataValue("email"))
 		_ = sns.sendUpdateEmail(record.GetStringDataValue("email"), record.GetId())
+		log.Print("[Sent mail] " + record.GetStringDataValue("email"))
 	}
 
 	sns.shouldNotify = false
