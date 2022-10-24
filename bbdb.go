@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/ewhanson/bbdb/migrations"
 	"github.com/ewhanson/bbdb/pbaddons"
 	"github.com/pocketbase/pocketbase"
 	"log"
