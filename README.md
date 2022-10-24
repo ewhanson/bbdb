@@ -15,3 +15,8 @@ For local dev, run the following. A `.env` file is required and should contain t
 ```bash
 ./build.sh
 ```
+
+## Run debug build
+```bash
+./dist/bbdb_darwin_arm64/bbdb serve --http 10.0.0.185:8090 --dir build/pb_data
+```
