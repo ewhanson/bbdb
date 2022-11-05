@@ -140,12 +140,12 @@ func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
 
 		metaData, err := exif.Decode(file)
 		if err != nil {
-			return err
+			return nil
 		}
 
 		dateTaken, err := metaData.DateTime()
 		if err != nil {
-			return err
+			return nil
 		}
 
 		e.Record.SetDataValue("dateTaken", dateTaken.UTC())
