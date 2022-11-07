@@ -50,6 +50,7 @@ func extendRootCmd(app *pocketbase.PocketBase) {
 func addRoutes(app *pocketbase.PocketBase) {
 	setupSubscriptionRoutes(app)
 	bindStaticFrontendUI(app)
+	setupHealthCheckRoute(app)
 }
 
 // bindStaticFrontendUI registers the endpoints that serve the static frontend UI.
@@ -179,4 +180,21 @@ func staticDirectoryHandler(fileSystem fs.FS, disablePathUnescaping bool) echo.H
 
 		return initialResult
 	}
+}
+
+func setupHealthCheckRoute(app *pocketbase.PocketBase) {
+	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		_, err := e.Router.AddRoute(echo.Route{
+			Method: http.MethodGet,
+			Path:   "/api/healthcheck",
+			Handler: func(c echo.Context) error {
+				return c.JSON(http.StatusOK, map[string]string{"status": "ok"})
+			},
+			Middlewares: nil,
+		})
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 }
