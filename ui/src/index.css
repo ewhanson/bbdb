@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .min-w-28rem {
+    min-width: 28rem;
+  }
+}
+
+.filters-select-area {
+  padding-top: 4px;
+}
+
+.card-compact .filters-container {
+  padding: 0;
+}
+
+.filters-select {
+  max-width: 8rem;
+  margin-left: 0;
+}
+
