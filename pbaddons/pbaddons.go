@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v5/middleware"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 	"github.com/rwcarlsen/goexif/exif"
 	"github.com/spf13/viper"
 	"io/fs"
@@ -33,6 +34,11 @@ func Init(app *pocketbase.PocketBase) {
 }
 
 func extendRootCmd(app *pocketbase.PocketBase) {
+	// Also add in default migration command
+	migratecmd.MustRegister(app, app.RootCmd, &migratecmd.Options{
+		Automigrate: true,
+	})
+
 	app.RootCmd.Version = Version
 	app.RootCmd.Use = "bbdb"
 	app.RootCmd.Short = "bbdb CLI"
@@ -85,7 +91,7 @@ func setupNewPhotoNotifications(app *pocketbase.PocketBase, sns *notifications.S
 func setupSubscribeRecordAction(app *pocketbase.PocketBase, sns *notifications.ScheduledNotifications) {
 	app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
 		if e.Record.Collection().Name == "subscribers" {
-			email := e.Record.GetStringDataValue("email")
+			email := e.Record.GetString("email")
 			err := sns.SendWelcomeEmail(email, e.Record.GetId())
 			if err != nil {
 				return err
@@ -103,12 +109,7 @@ func setupSubscriptionRoutes(app *pocketbase.PocketBase) {
 			Handler: func(c echo.Context) error {
 				id := c.QueryParam("id")
 
-				collection, err := app.Dao().FindCollectionByNameOrId("subscribers")
-				if err != nil {
-					return err
-				}
-
-				record, err := app.Dao().FindRecordById(collection, id, nil)
+				record, err := app.Dao().FindRecordById("subscribers", id, nil)
 				if err != nil {
 					return err
 				}
@@ -149,7 +150,7 @@ func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
 			return nil
 		}
 
-		e.Record.SetDataValue("dateTaken", dateTaken.UTC())
+		e.Record.Set("dateTaken", dateTaken.UTC())
 		return nil
 	})
 }

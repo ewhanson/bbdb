@@ -5,6 +5,7 @@ import (
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/tools/mailer"
 	"github.com/spf13/viper"
 	"log"
 	"net/mail"
@@ -65,8 +66,8 @@ func (sns *ScheduledNotifications) dispatchNotifications(app *pocketbase.PocketB
 	}
 	records := models.NewRecordsFromNullStringMaps(collection, rows)
 	for _, record := range records {
-		_ = sns.sendUpdateEmail(record.GetStringDataValue("email"), record.GetId())
-		log.Print("[Sent mail] " + record.GetStringDataValue("email"))
+		_ = sns.sendUpdateEmail(record.GetString("email"), record.GetId())
+		log.Print("[Sent mail] " + record.GetString("email"))
 	}
 
 	sns.shouldNotify = false
@@ -79,16 +80,16 @@ func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, userId 
 
 	body := "<html><body style=\"font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\"><h1>Welcome! 👋</h1><p>You are receiving this because you signed up to receive notification emails from <a href=\"https://babygramz.com\">Babygramz</a>.</p><p>You will receive an email update, once per day, whenever new photos are available.</p>" + getHtmlFooter(userId) + "</body></html>"
 
-	err := m.Send(
-		mail.Address{
+	err := m.Send(&mailer.Message{
+		From: mail.Address{
 			Name:    sns.app.Settings().Meta.SenderName,
 			Address: sns.app.Settings().Meta.SenderAddress,
 		},
-		mail.Address{Address: emailAddress},
-		"📫 Welcome to Babygramz updates",
-		body,
-		nil,
-	)
+		To:      mail.Address{Address: emailAddress},
+		Subject: "📫 Welcome to Babygramz updates",
+		HTML:    body,
+	})
+
 	if err != nil {
 		return err
 	}
@@ -102,16 +103,15 @@ func (sns *ScheduledNotifications) sendUpdateEmail(emailAddress string, userId s
 
 	body := "<html><body style=\"font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\"><h1>Good news! 🎉</h1> <p>New photos are available on Babygramz.</p><p>Visit <a href=\"https://babygramz.com\">babygramz.com</a> to view them.</p>" + getHtmlFooter(userId) + "</body></html>"
 
-	err := m.Send(
-		mail.Address{
+	err := m.Send(&mailer.Message{
+		From: mail.Address{
 			Name:    sns.app.Settings().Meta.SenderName,
 			Address: sns.app.Settings().Meta.SenderAddress,
 		},
-		mail.Address{Address: emailAddress},
-		"📸 New photos available!",
-		body,
-		nil,
-	)
+		To:   mail.Address{Address: emailAddress},
+		HTML: body,
+	})
+
 	if err != nil {
 		return err
 	}
