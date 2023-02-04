@@ -49,8 +49,7 @@ func extendRootCmd(app *pocketbase.PocketBase) {
 		"HH:mm",
 		"Time of day to send notification in HH:mm format")
 	_ = viper.BindPFlag("notificationTime", app.RootCmd.PersistentFlags().Lookup("notificationTime"))
-	// Should be 08:00 am Pacific time
-	viper.SetDefault("notificationTime", "15:00")
+	viper.SetDefault("notificationTime", "08:15")
 }
 
 func addRoutes(app *pocketbase.PocketBase) {
