@@ -2,13 +2,16 @@ package pbaddons
 
 import (
 	"fmt"
+	"github.com/disintegration/imaging"
 	"github.com/ewhanson/bbdb/notifications"
 	"github.com/ewhanson/bbdb/ui"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
 	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+	"github.com/pocketbase/pocketbase/tools/list"
 	"github.com/rwcarlsen/goexif/exif"
 	"github.com/spf13/viper"
 	"io/fs"
@@ -27,6 +30,7 @@ func Init(app *pocketbase.PocketBase) {
 	addRoutes(app)
 	setupImageHeaders(app)
 	getPhotoExifDataBeforeCreate(app)
+	downloadWebFriendlyImages(app)
 
 	sns := notifications.New(app)
 	setupNewPhotoNotifications(app, sns)
@@ -154,7 +158,7 @@ func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
 	})
 }
 
-// StaticDirectoryHandler is similar to `apis.StaticDirectoryHandler`
+// staticDirectoryHandler is similar to `apis.StaticDirectoryHandler`
 // but will fall back to index.html for SPA routing when returning a 404
 //
 // see apis.StaticDirectoryHandler for more info on code below
@@ -194,6 +198,64 @@ func setupHealthCheckRoute(app *pocketbase.PocketBase) {
 		})
 		if err != nil {
 			return err
+		}
+		return nil
+	})
+}
+
+func downloadWebFriendlyImages(app *pocketbase.PocketBase) {
+	var imageContentTypes = []string{"image/png", "image/jpg", "image/jpeg", "image/gif"}
+
+	app.OnFileDownloadRequest().Add(func(e *core.FileDownloadEvent) error {
+		if e.HttpContext.QueryParam("size") != "" {
+			filesystem, err := app.NewFilesystem()
+			if err != nil {
+				return apis.NewBadRequestError("Filesystem initialization failure.", err)
+			}
+			defer filesystem.Close()
+
+			filename := e.HttpContext.PathParam("filename")
+			originalPath := e.Record.BaseFilesPath() + "/" + filename
+
+			// Extract the original file meta attributes and check its existence
+			oAttrs, oAttrsErr := filesystem.Attributes(originalPath)
+			if oAttrsErr != nil {
+				return apis.NewNotFoundError("", err)
+			}
+
+			// Check if it's an image
+			if list.ExistInSlice(oAttrs.ContentType, imageContentTypes) {
+				// Add a thumb size as file suffix
+				servedName := "size-large" + "_" + filename
+				servedPath := e.Record.BaseFilesPath() + "/thumbs_" + filename + "/" + servedName
+
+				// check if the thumb exists:
+				// - if doesn't exist - create a new thumb with the specified thumb size
+				// - if exists - compare last modified dates to determine whether the thumb should be recreated
+				tAttr, tAttrErr := filesystem.Attributes(servedPath)
+				if tAttrErr != nil || oAttrs.ModTime.After(tAttr.ModTime) {
+					imgFile, err := filesystem.GetFile(originalPath)
+					if err != nil {
+						return apis.NewNotFoundError("", err)
+					}
+					defer imgFile.Close()
+					img, err := imaging.Decode(imgFile, imaging.AutoOrientation(true))
+					if err != nil {
+						return apis.NewNotFoundError("", err)
+					}
+					thumbSize := ""
+					if img.Bounds().Max.X > img.Bounds().Max.Y {
+						thumbSize = "1280x0"
+					} else {
+						thumbSize = "0x1280"
+					}
+					if err := filesystem.CreateThumb(originalPath, servedPath, thumbSize); err != nil {
+						servedPath = originalPath
+					}
+				}
+				e.ServedName = servedName
+				e.ServedPath = servedPath
+			}
 		}
 		return nil
 	})

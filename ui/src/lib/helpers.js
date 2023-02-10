@@ -6,8 +6,8 @@ export function getBaseUrl() {
     : import.meta.env.VITE_POCKETBASE_URL;
 }
 
-export function getPocketBaseFileUrl(recordId, filename) {
-  return `${getBaseUrl()}/api/files/photos/${recordId}/${filename}`;
+export function getPocketBaseFileUrl(recordId, filename, size = "large") {
+  return `${getBaseUrl()}/api/files/photos/${recordId}/${filename}?size=${size}`;
 }
 
 export function getUniqueArrayBy(array, key) {
