@@ -15,6 +15,7 @@ import (
 	"github.com/rwcarlsen/goexif/exif"
 	"github.com/spf13/viper"
 	"io/fs"
+	"log"
 	"net/http"
 	"net/url"
 	"path/filepath"
@@ -194,7 +195,12 @@ func downloadWebFriendlyImages(app *pocketbase.PocketBase) {
 			if err != nil {
 				return apis.NewBadRequestError("Filesystem initialization failure.", err)
 			}
-			defer filesystem.Close()
+			defer func() {
+				err := filesystem.Close()
+				if err != nil {
+					log.Println("[Filesystem error]: ", err)
+				}
+			}()
 
 			filename := e.HttpContext.PathParam("filename")
 			originalPath := e.Record.BaseFilesPath() + "/" + filename
@@ -220,7 +226,12 @@ func downloadWebFriendlyImages(app *pocketbase.PocketBase) {
 					if err != nil {
 						return apis.NewNotFoundError("", err)
 					}
-					defer imgFile.Close()
+					defer func() {
+						err := imgFile.Close()
+						if err != nil {
+							log.Println("[Filesystem error]: ", err)
+						}
+					}()
 					img, err := imaging.Decode(imgFile, imaging.AutoOrientation(true))
 					if err != nil {
 						return apis.NewNotFoundError("", err)
