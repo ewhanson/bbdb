@@ -29,7 +29,6 @@ func Init(app *pocketbase.PocketBase) {
 	extendRootCmd(app)
 
 	addRoutes(app)
-	setupImageHeaders(app)
 	getPhotoExifDataBeforeCreate(app)
 	downloadWebFriendlyImages(app)
 
@@ -68,15 +67,6 @@ func bindStaticFrontendUI(app *pocketbase.PocketBase) {
 		// Serves static files from the ui/dist directory
 		e.Router.GET("/*", staticDirectoryHandler(ui.DistDirFS, false), middleware.Gzip())
 
-		return nil
-	})
-}
-
-func setupImageHeaders(app *pocketbase.PocketBase) {
-	// Add cache control headers for image caching
-	app.OnFileDownloadRequest().Add(func(e *core.FileDownloadEvent) error {
-		// TODO: Specify that cache headers should only apply to images
-		e.HttpContext.Response().Header().Set("Cache-Control", "public, max-age=31536000")
 		return nil
 	})
 }
