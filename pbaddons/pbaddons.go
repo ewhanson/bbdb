@@ -35,6 +35,8 @@ func Init(app *pocketbase.PocketBase) {
 	sns := notifications.New(app)
 	setupNewPhotoNotifications(app, sns)
 	setupSubscribeRecordAction(app, sns)
+	// TODO: Used in manually testing of new emails
+	debugNotificationRoute(app, sns)
 }
 
 func extendRootCmd(app *pocketbase.PocketBase) {
@@ -61,6 +63,48 @@ func addRoutes(app *pocketbase.PocketBase) {
 	bindStaticFrontendUI(app)
 }
 
+func debugNotificationRoute(app *pocketbase.PocketBase, sns *notifications.ScheduledNotifications) {
+	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		_, err := e.Router.AddRoute(echo.Route{
+			Method: http.MethodPost,
+			Path:   "/api/debug/queueNotification",
+			Handler: func(c echo.Context) error {
+				sns.SetUpdateAvailable()
+				return c.JSON(http.StatusOK, sns.GetStatus())
+			},
+			Middlewares: []echo.MiddlewareFunc{
+				apis.ActivityLogger(app),
+				apis.RequireAdminAuth(),
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		_, err = e.Router.AddRoute(echo.Route{
+			Method: http.MethodPost,
+			Path:   "/api/debug/dispatchNotification",
+			Handler: func(c echo.Context) error {
+				err := sns.DebugDispatch(app)
+				if err != nil {
+					return err
+				}
+
+				return c.JSON(http.StatusOK, sns.GetStatus())
+			},
+			Middlewares: []echo.MiddlewareFunc{
+				apis.ActivityLogger(app),
+				apis.RequireAdminAuth(),
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+}
+
 // bindStaticFrontendUI registers the endpoints that serve the static frontend UI.
 func bindStaticFrontendUI(app *pocketbase.PocketBase) {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
@@ -85,7 +129,8 @@ func setupSubscribeRecordAction(app *pocketbase.PocketBase, sns *notifications.S
 	app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
 		if e.Record.Collection().Name == "subscribers" {
 			email := e.Record.GetString("email")
-			err := sns.SendWelcomeEmail(email, e.Record.GetId())
+			name := e.Record.GetString("name")
+			err := sns.SendWelcomeEmail(email, name, e.Record.GetId())
 			if err != nil {
 				return err
 			}

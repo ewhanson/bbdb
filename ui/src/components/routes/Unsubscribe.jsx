@@ -1,6 +1,7 @@
 import { MainComponentWrapper } from "../MainComponentWrapper.jsx";
 import { useEffect, useState } from "preact/hooks";
 import { LoadingSpinner } from "../LoadingSpinner.jsx";
+import { getBaseUrl } from "../../lib/helpers.js";
 
 export function Unsubscribe({ id }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,10 +10,9 @@ export function Unsubscribe({ id }) {
 
   useEffect(async () => {
     setIsLoading(true);
-    const res = await fetch(
-      `${import.meta.env.VITE_POCKETBASE_URL}/api/unsubscribe?id=${id}`,
-      { method: "POST" }
-    );
+    const res = await fetch(`${getBaseUrl()}/api/unsubscribe?id=${id}`, {
+      method: "POST",
+    });
 
     if (res.status === 200) {
       setErrorMessage("");

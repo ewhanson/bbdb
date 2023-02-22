@@ -67,6 +67,6 @@ export const getPhotos = async (page, sortOrder, perPage = 10) => {
   }
 };
 
-export const signupForNotifications = async (email) => {
-  return await client.collection("subscribers").create({ email });
+export const signupForNotifications = async (email, name) => {
+  return await client.collection("subscribers").create({ email, name });
 };

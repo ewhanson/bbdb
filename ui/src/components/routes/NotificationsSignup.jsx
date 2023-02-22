@@ -7,6 +7,7 @@ export function NotificationsSignup() {
   const isValid = useAuthProtected();
 
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,10 +20,11 @@ export function NotificationsSignup() {
 
     try {
       // Function here
-      await signupForNotifications(email);
+      await signupForNotifications(email, name);
       setIsSubmitting(false);
       setSuccessMessage("Sign up successful! Check your email for details.");
       setEmail("");
+      setName("");
     } catch (e) {
       console.error({ notificationSignupError: e });
       setIsSubmitting(false);
@@ -79,12 +81,26 @@ export function NotificationsSignup() {
       <div className="card bg-base-100 shadow-xl w-auto">
         <form className={"card-body"} onSubmit={onSubmit}>
           <h2 className={"card-title"}>Notifications Signup</h2>
+          <p>
+            Sign up to receive an email when there are new photos. <br />
+            We'll email you at most once a day.
+          </p>
           <div className={"form-control w-full max-w-lg"}>
             <label className={"label"}>
-              <span className={"label-text"}>
-                Sign up to receive an email when there are new photos. We'll
-                email you at most once a day.
-              </span>
+              <span className={"label-text"}>First Name</span>
+            </label>
+            <input
+              type={"text"}
+              value={name}
+              onInput={(e) => setName(e.target.value)}
+              placeholder={"Enter your first name"}
+              className={"input input-bordered w-full"}
+              required
+            />
+          </div>
+          <div className={"form-control w-full max-w-lg"}>
+            <label className={"label"}>
+              <span className={"label-text"}>Email</span>
             </label>
             <input
               type={"email"}
