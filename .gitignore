@@ -8,3 +8,4 @@ build
 dist/
 pb_data
 .secrets
+bbdb
