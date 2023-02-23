@@ -1,7 +1,7 @@
 {
   "name": "babygramz",
   "private": true,
-  "version": "0.8.0",
+  "version": "0.9.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -11,7 +11,7 @@
   "dependencies": {
     "cookies-js": "^1.2.3",
     "luxon": "^3.2.1",
-    "pocketbase": "^0.10.1",
+    "pocketbase": "^0.11.0",
     "preact": "^10.11.3",
     "preact-router": "^4.1.0"
   },

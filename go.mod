@@ -3,10 +3,11 @@ module github.com/ewhanson/bbdb
 go 1.19
 
 require (
+	github.com/disintegration/imaging v1.6.2
 	github.com/go-co-op/gocron v1.18.0
 	github.com/labstack/echo/v5 v5.0.0-20220201181537-ed2888cfa198
 	github.com/pocketbase/dbx v1.9.0
-	github.com/pocketbase/pocketbase v0.12.2
+	github.com/pocketbase/pocketbase v0.12.3
 	github.com/rwcarlsen/goexif v0.0.0-20190401172101-9e8deecbddbd
 	github.com/spf13/viper v1.14.0
 )
@@ -34,7 +35,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.18.2 // indirect
 	github.com/aws/smithy-go v1.13.5 // indirect
-	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/domodwyer/mailyak/v3 v3.3.4 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.14.1 // indirect
