@@ -35,8 +35,9 @@ func Init(app *pocketbase.PocketBase) {
 	sns := notifications.New(app)
 	setupNewPhotoNotifications(app, sns)
 	setupSubscribeRecordAction(app, sns)
-	// TODO: Used in manually testing of new emails
-	debugNotificationRoute(app, sns)
+	if app.IsDebug() {
+		debugNotificationRoute(app, sns)
+	}
 }
 
 func extendRootCmd(app *pocketbase.PocketBase) {
