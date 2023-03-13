@@ -8,6 +8,10 @@ export const constants = {
     WHATS_NEW: "/whatsnew",
     UNSUBSCRIBE: "/unsubscribe",
     FOUR_OH_FOUR: "/404",
+    UPLOADER: {
+      LOGIN: "/uploader/login",
+      DASHBOARD: "/uploader/dashboard",
+    },
   },
   ICONS: {
     DOTS_HORIZONTAL: "dots_horizontal",

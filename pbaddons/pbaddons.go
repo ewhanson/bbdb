@@ -12,7 +12,6 @@ import (
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 	"github.com/pocketbase/pocketbase/tools/list"
-	"github.com/rwcarlsen/goexif/exif"
 	"github.com/spf13/viper"
 	"io/fs"
 	"log"
@@ -29,7 +28,6 @@ func Init(app *pocketbase.PocketBase) {
 	extendRootCmd(app)
 
 	addRoutes(app)
-	getPhotoExifDataBeforeCreate(app)
 	downloadWebFriendlyImages(app)
 
 	sns := notifications.New(app)
@@ -164,32 +162,6 @@ func setupSubscriptionRoutes(app *pocketbase.PocketBase) {
 		if err != nil {
 			return err
 		}
-		return nil
-	})
-}
-
-func getPhotoExifDataBeforeCreate(app *pocketbase.PocketBase) {
-	app.OnRecordBeforeCreateRequest().Add(func(e *core.RecordCreateEvent) error {
-		if e.Record.Collection().Name != "photos" {
-			return nil
-		}
-
-		file, _, err := e.HttpContext.Request().FormFile("file")
-		if err != nil {
-			return err
-		}
-
-		metaData, err := exif.Decode(file)
-		if err != nil {
-			return nil
-		}
-
-		dateTaken, err := metaData.DateTime()
-		if err != nil {
-			return nil
-		}
-
-		e.Record.Set("dateTaken", dateTaken.UTC())
 		return nil
 	})
 }

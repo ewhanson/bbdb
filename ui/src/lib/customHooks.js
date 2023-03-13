@@ -4,16 +4,28 @@ import { route } from "preact-router";
 import { constants } from "./constants.js";
 import Cookies from "cookies-js";
 
-export const useAuthProtected = () => {
-  const [isValid] = useContext(AuthContext);
+export const useViewerAuthProtected = () => {
+  const [authData] = useContext(AuthContext);
 
   useEffect(() => {
-    if (isValid) return;
+    if (authData.isViewer) return;
 
     route(constants.ROUTES.LOGIN, true);
-  }, [isValid]);
+  }, [authData]);
 
-  return isValid;
+  return authData.isViewer;
+};
+
+export const useUploaderAuthProtected = () => {
+  const [authData] = useContext(AuthContext);
+
+  useEffect(() => {
+    if (authData.isUploader) return;
+
+    route(constants.ROUTES.UPLOADER.LOGIN, true);
+  }, [authData]);
+
+  return authData.isUploader;
 };
 
 export const useGetCookie = (key) => {

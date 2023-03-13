@@ -1,38 +1,40 @@
 import { useContext, useState } from "preact/hooks";
+import { AuthContext } from "../../lib/AuthContextProvider.js";
 import {
   isUploaderLoggedIn,
   isViewerLoggedIn,
-  viewerLogin,
+  login,
 } from "../../lib/pocketbase.js";
-import { AuthContext } from "../../lib/AuthContextProvider.js";
 import { route } from "preact-router";
 import { constants } from "../../lib/constants.js";
 
-export function ViewerAuth() {
+export function UploaderAuth() {
   const [authData, setAuthData] = useContext(AuthContext);
 
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function onSubmit(event) {
+  const onSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(false);
     setErrorMessage("");
-    setIsSubmitting(true);
+
     try {
-      await viewerLogin(password);
+      await login(email, password);
       setAuthData({
         isViewer: isViewerLoggedIn(),
         isUploader: isUploaderLoggedIn(),
       });
       setIsSubmitting(false);
-      route(constants.ROUTES.FEED);
+      route(constants.ROUTES.UPLOADER.DASHBOARD);
     } catch (e) {
-      console.error({ loginError: e });
+      console.error({ loginError: e.message });
       setIsSubmitting(false);
       setErrorMessage(e.message);
     }
-  }
+  };
 
   return (
     <>
@@ -56,28 +58,47 @@ export function ViewerAuth() {
           </div>
         </div>
       )}
-      <div className="card bg-base-100 shadow-xl w-auto sm:w-96">
+
+      <div className="card bg-base-100 shadow-xl w-auto">
         <form className="card-body" onSubmit={onSubmit}>
-          <h2 className="card-title">Babygramz Access</h2>
-          <div className="form-control w-full max-w-md">
+          <h2 className="card-title">Uploader Login</h2>
+          <p>
+            Users with uploading privileges can login here to upload new photos.
+          </p>
+
+          {/* Email */}
+          <div className="form-control w-full max-w-lg">
             <label className="label">
-              <span className="label-text">
-                Please enter the password you were given for access.{" "}
-              </span>
+              <span className="label-text">Email</span>
             </label>
             <input
-              value={password}
-              onInput={(e) => {
-                setPassword(e.target.value);
-              }}
-              type="password"
-              placeholder="Password"
-              className="input input-bordered w-full max-w-md"
+              type="email"
+              value={email}
+              onInput={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="input input-bordered w-full"
+              required
             />
           </div>
+
+          {/* Password */}
+          <div className="form-control w-full max-w-lg">
+            <label className="label">
+              <span className="label-text">Password</span>
+            </label>
+            <input
+              type="password"
+              value={password}
+              onInput={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="input input-bordered w-full"
+              required
+            />
+          </div>
+
           <div className="card-actions justify-end">
             <button
-              type={"submit"}
+              type="Submit"
               className={`btn btn-primary ${isSubmitting ? "loading" : ""}`}
             >
               Submit

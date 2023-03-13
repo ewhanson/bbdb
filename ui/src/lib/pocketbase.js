@@ -8,20 +8,31 @@ import {
 
 const client = new PocketBase(getBaseUrl());
 
-export const login = async (password) => {
+export const viewerLogin = async (password) => {
   const email =
     import.meta.env.VITE_VIEWER_USER === undefined
       ? `${password}.user@babygramz.com`
       : import.meta.env.VITE_VIEWER_USER;
-  return await client.collection("users").authWithPassword(email, password);
+  return await login(email, password);
+};
+
+export const login = async (usernameOrEmail, password) => {
+  return await client
+    .collection("users")
+    .authWithPassword(usernameOrEmail, password);
 };
 
 export const logOut = () => {
   client.authStore.clear();
 };
-
-export const isUserLoggedIn = () => {
+export const isViewerLoggedIn = () => {
   return client.authStore.isValid;
+};
+
+export const isUploaderLoggedIn = () => {
+  return (
+    client.authStore.isValid && client.authStore.model?.role === "uploader"
+  );
 };
 
 export const getPhotos = async (page, sortOrder, perPage = 10) => {
@@ -65,6 +76,19 @@ export const getPhotos = async (page, sortOrder, perPage = 10) => {
   } finally {
     await client.collection("users").authRefresh();
   }
+};
+
+export const postPhoto = async (description, file, dateTime) => {
+  const formData = new FormData();
+
+  formData.append("description", description);
+  formData.append("file", file);
+
+  if (dateTime !== "") {
+    formData.append("dateTaken", dateTime);
+  }
+
+  return client.collection("photos").create(formData);
 };
 
 export const signupForNotifications = async (email, name) => {

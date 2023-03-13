@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import ExifReader from "exifreader";
 
 export function getBaseUrl() {
   return import.meta.env.VITE_POCKETBASE_URL === undefined
@@ -40,4 +41,43 @@ export function getLocalDateFromFormat(
   })
     .setZone("system")
     .toLocaleString(DateTime.DATETIME_SHORT);
+}
+
+export async function tryGetDateTimeFromImage(file) {
+  const tags = await ExifReader.load(file, { includeUnknown: true });
+
+  let dateTime = "";
+  let offset = "";
+
+  if (
+    tags.hasOwnProperty("DateTimeOriginal") &&
+    tags.DateTimeOriginal.value[0]
+  ) {
+    dateTime = tags.DateTimeOriginal.value[0];
+  } else if (tags.hasOwnProperty("DateTime") && tags.DateTime.value[0]) {
+    dateTime = tags.DateTime.value[0];
+  } else if (
+    tags.hasOwnProperty("DateTimeDigitized") &&
+    tags.DateTimeDigitized.value[0]
+  ) {
+    dateTime = tags.DateTimeDigitized.value[0];
+  }
+
+  if (
+    tags.hasOwnProperty("OffsetTimeOriginal") &&
+    tags.OffsetTimeOriginal.value[0]
+  ) {
+    offset = tags.OffsetTimeOriginal.value[0];
+  } else if (tags.hasOwnProperty("OffsetTime") && tags.OffsetTime.value[0]) {
+    offset = tags.OffsetTime.value[0];
+  } else if (
+    tags.hasOwnProperty("OffsetTimeDigitized") &&
+    tags.OffsetTimeDigitized.value[0]
+  ) {
+    offset = tags.OffsetTimeDigitized.value[0];
+  }
+
+  return DateTime.fromFormat(dateTime + offset, "yyyy:MM:dd HH:mm:ssZZ")
+    .toUTC()
+    .toISO();
 }

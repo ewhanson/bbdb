@@ -1,41 +1,42 @@
-import { MainComponentWrapper } from "../MainComponentWrapper.jsx";
-import { useViewerAuthProtected } from "../../lib/customHooks.js";
+import { useUploaderAuthProtected } from "../../lib/customHooks.js";
 import { useState } from "preact/hooks";
-import { signupForNotifications } from "../../lib/pocketbase.js";
+import { postPhoto } from "../../lib/pocketbase.js";
+import { tryGetDateTimeFromImage } from "../../lib/helpers.js";
 
-export function NotificationsSignup() {
-  const isViewer = useViewerAuthProtected();
+export function PhotoUploader() {
+  const isUploader = useUploaderAuthProtected();
 
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null);
+  const [dateTime, setDateTime] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
     setErrorMessage("");
     setSuccessMessage("");
-    setIsSubmitting(true);
 
     try {
-      // Function here
-      await signupForNotifications(email, name);
+      await postPhoto(description, file, dateTime);
       setIsSubmitting(false);
-      setSuccessMessage("Sign up successful! Check your email for details.");
-      setEmail("");
-      setName("");
+      setSuccessMessage("Photo upload successful!");
+      setDescription("");
+      setFile(null);
     } catch (e) {
-      console.error({ notificationSignupError: e.message });
+      console.error({ error: e.message });
       setIsSubmitting(false);
       setErrorMessage(e.message);
+      setSuccessMessage("");
     }
   };
 
-  if (!isViewer) return null;
+  if (!isUploader) return null;
 
   return (
-    <MainComponentWrapper useFooter={true}>
+    <>
       {errorMessage.length !== 0 && (
         <div className="alert alert-error max-w-xl shadow-lg">
           <div>
@@ -79,41 +80,50 @@ export function NotificationsSignup() {
       )}
 
       <div className="card bg-base-100 shadow-xl w-auto">
-        <form className={"card-body"} onSubmit={onSubmit}>
-          <h2 className={"card-title"}>Notifications Signup</h2>
+        <form className="card-body" onSubmit={onSubmit}>
+          <h2 className="card-title">Upload a photo</h2>
           <p>
-            Sign up to receive an email when there are new photos. <br />
-            We'll email you at most once a day.
+            Use this form to upload a new photo.
+            <br />
+            The date taken will be inferred from the photo directly.
           </p>
-          <div className={"form-control w-full max-w-lg"}>
-            <label className={"label"}>
-              <span className={"label-text"}>First Name</span>
+
+          {/* Title */}
+          <div className="form-control w-full max-w-lg">
+            <label className="label">
+              <span className="label-text">Description</span>
             </label>
             <input
-              type={"text"}
-              value={name}
-              onInput={(e) => setName(e.target.value)}
-              placeholder={"Enter your first name"}
-              className={"input input-bordered w-full"}
+              type="text"
+              value={description}
+              onInput={(e) => setDescription(e.target.value)}
+              placeholder="Enter a description"
+              className="input input-bordered w-full"
               required
             />
           </div>
-          <div className={"form-control w-full max-w-lg"}>
-            <label className={"label"}>
-              <span className={"label-text"}>Email</span>
-            </label>
-            <input
-              type={"email"}
-              value={email}
-              onInput={(e) => setEmail(e.target.value)}
-              placeholder={"Enter your email"}
-              className={"input input-bordered w-full"}
-              required
-            />
-          </div>
-          <div className="card-actions justify-end">
+
+          {/* File */}
+          <div className="form-control w-full max-w-sm"></div>
+          <label className="label">
+            <span className="label-text">Photo</span>
+          </label>
+          <input
+            type="file"
+            value={file}
+            onInput={async (e) => {
+              setFile(e.target?.files[0]);
+              const dateTime = await tryGetDateTimeFromImage(
+                e.target?.files[0]
+              );
+              setDateTime(dateTime);
+            }}
+            className="file-input file-input-bordered w-full"
+          />
+
+          <div className="card-actions justify-end pt-4">
             <button
-              type={"submit"}
+              type="Submit"
               className={`btn btn-primary ${isSubmitting ? "loading" : ""}`}
             >
               Submit
@@ -121,6 +131,6 @@ export function NotificationsSignup() {
           </div>
         </form>
       </div>
-    </MainComponentWrapper>
+    </>
   );
 }
