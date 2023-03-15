@@ -112,7 +112,7 @@ func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, name st
 			Name:    sns.app.Settings().Meta.SenderName,
 			Address: sns.app.Settings().Meta.SenderAddress,
 		},
-		To:      mail.Address{Address: emailAddress},
+		To:      []mail.Address{{Address: emailAddress}},
 		Subject: "📫 Welcome to Babygramz",
 		HTML:    body,
 	})
@@ -141,7 +141,7 @@ func (sns *ScheduledNotifications) sendUpdateEmail(emailAddress string, name str
 			Name:    sns.app.Settings().Meta.SenderName,
 			Address: sns.app.Settings().Meta.SenderAddress,
 		},
-		To:      mail.Address{Address: emailAddress},
+		To:      []mail.Address{{Address: emailAddress}},
 		Subject: "Update: 📸 " + strconv.Itoa(photoCount) + " new " + photoNoun + " available",
 		HTML:    body,
 	})

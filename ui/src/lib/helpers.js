@@ -33,7 +33,7 @@ export function getDisplayDateFromFormat(dateString) {
 
 export function getLocalDateFromFormat(
   dateString,
-  format = "yyyy-MM-dd HH:mm:ss.SSS"
+  format = "yyyy-MM-dd HH:mm:ss.SSS'Z'"
 ) {
   return DateTime.fromFormat(dateString, format, {
     zone: "UTC",
