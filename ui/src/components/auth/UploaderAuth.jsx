@@ -18,7 +18,7 @@ export function UploaderAuth() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setIsSubmitting(false);
+    setIsSubmitting(true);
     setErrorMessage("");
 
     try {

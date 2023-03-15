@@ -113,10 +113,12 @@ export function PhotoUploader() {
             value={file}
             onInput={async (e) => {
               setFile(e.target?.files[0]);
-              const dateTime = await tryGetDateTimeFromImage(
+              const currentDateTime = await tryGetDateTimeFromImage(
                 e.target?.files[0]
               );
-              setDateTime(dateTime);
+              if (currentDateTime !== null) {
+                setDateTime(currentDateTime);
+              }
             }}
             className="file-input file-input-bordered w-full"
           />
