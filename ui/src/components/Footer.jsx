@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="footer footer-center p-4 bg-base-100 text-base-content">
       <div>
         <p>
-          Copyright © {year} - Erik Hanson - v{version}
+          Copyright © 2022-{year} - Erik Hanson - v{version}
         </p>
       </div>
     </footer>
