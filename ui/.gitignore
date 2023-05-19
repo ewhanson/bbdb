@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 .env*
 !.env.sample
+/test-results/
+/playwright-report/
+/playwright/.cache/

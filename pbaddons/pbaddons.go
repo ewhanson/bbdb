@@ -3,6 +3,7 @@ package pbaddons
 import (
 	"fmt"
 	"github.com/disintegration/imaging"
+	_ "github.com/ewhanson/bbdb/migrations"
 	"github.com/ewhanson/bbdb/notifications"
 	"github.com/ewhanson/bbdb/ui"
 	"github.com/labstack/echo/v5"
@@ -42,6 +43,7 @@ func extendRootCmd(app *pocketbase.PocketBase) {
 	// Also add in default migration command
 	migratecmd.MustRegister(app, app.RootCmd, &migratecmd.Options{
 		Automigrate: true,
+		Dir:         "migrations",
 	})
 
 	app.RootCmd.Version = Version
