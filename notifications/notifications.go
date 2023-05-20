@@ -25,7 +25,7 @@ type ScheduledNotifications struct {
 // New runs initial setup for ScheduledNotifications and set up scheduled tasks
 func New(app *pocketbase.PocketBase) *ScheduledNotifications {
 	sns := &ScheduledNotifications{
-		scheduler: gocron.NewScheduler(time.UTC),
+		scheduler: gocron.NewScheduler(time.Local),
 		app:       app,
 	}
 
