@@ -1,8 +1,7 @@
 {
   "name": "bbdb",
-  "version": "1.0.0",
+  "version": "0.10.0",
   "description": "For UI submodule, a `.env.production` file is required, and should contain the following. These values are used at compile time. This should be placed in the bbdb root directory",
-  "main": "index.js",
   "scripts": {},
   "keywords": [],
   "author": "",
