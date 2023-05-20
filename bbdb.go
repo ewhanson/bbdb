@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ewhanson/bbdb/pbaddons"
+	"github.com/ewhanson/bbdb/hooks"
 	"github.com/pocketbase/pocketbase"
 	"log"
 )
@@ -10,7 +10,7 @@ func main() {
 	log.Print("Starting BBDB...")
 	app := pocketbase.New()
 
-	pbaddons.Init(app)
+	hooks.Init(app)
 
 	if err := app.Start(); err != nil {
 		log.Fatal(err)

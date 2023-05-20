@@ -1,4 +1,4 @@
-package pbaddons
+package hooks
 
 import (
 	"fmt"
