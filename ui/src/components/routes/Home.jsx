@@ -5,10 +5,10 @@ import { route } from "preact-router";
 import { Footer } from "../Footer.jsx";
 
 export function Home() {
-  const [isValid] = useContext(AuthContext);
+  const [authData] = useContext(AuthContext);
 
   useEffect(() => {
-    if (isValid) {
+    if (authData.isViewer) {
       route(constants.ROUTES.FEED, true);
     }
   }, []);
