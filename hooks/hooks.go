@@ -5,6 +5,8 @@ import (
 	"github.com/disintegration/imaging"
 	_ "github.com/ewhanson/bbdb/migrations"
 	"github.com/ewhanson/bbdb/notifications"
+	"github.com/ewhanson/bbdb/photos_queue"
+	"github.com/ewhanson/bbdb/scheduler"
 	"github.com/ewhanson/bbdb/ui"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
@@ -31,12 +33,16 @@ func Init(app *pocketbase.PocketBase) {
 	addRoutes(app)
 	downloadWebFriendlyImages(app)
 
-	sns := notifications.New(app)
-	setupNewPhotoNotifications(app, sns)
+	s := scheduler.New()
+	pq := photos_queue.New(app, s)
+
+	sns := notifications.New(app, s, pq)
 	setupSubscribeRecordAction(app, sns)
-	if app.IsDebug() {
-		debugNotificationRoute(app, sns)
-	}
+
+	app.OnAfterBootstrap().Add(func(e *core.BootstrapEvent) error {
+		s.Start()
+		return nil
+	})
 }
 
 func extendRootCmd(app *pocketbase.PocketBase) {
@@ -64,63 +70,11 @@ func addRoutes(app *pocketbase.PocketBase) {
 	bindStaticFrontendUI(app)
 }
 
-func debugNotificationRoute(app *pocketbase.PocketBase, sns *notifications.ScheduledNotifications) {
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
-		_, err := e.Router.AddRoute(echo.Route{
-			Method: http.MethodPost,
-			Path:   "/api/debug/queueNotification",
-			Handler: func(c echo.Context) error {
-				sns.SetUpdateAvailable()
-				return c.JSON(http.StatusOK, sns.GetStatus())
-			},
-			Middlewares: []echo.MiddlewareFunc{
-				apis.ActivityLogger(app),
-				apis.RequireAdminAuth(),
-			},
-		})
-		if err != nil {
-			return err
-		}
-
-		_, err = e.Router.AddRoute(echo.Route{
-			Method: http.MethodPost,
-			Path:   "/api/debug/dispatchNotification",
-			Handler: func(c echo.Context) error {
-				err := sns.DebugDispatch(app)
-				if err != nil {
-					return err
-				}
-
-				return c.JSON(http.StatusOK, sns.GetStatus())
-			},
-			Middlewares: []echo.MiddlewareFunc{
-				apis.ActivityLogger(app),
-				apis.RequireAdminAuth(),
-			},
-		})
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
-
 // bindStaticFrontendUI registers the endpoints that serve the static frontend UI.
 func bindStaticFrontendUI(app *pocketbase.PocketBase) {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		// Serves static files from the ui/dist directory
 		e.Router.GET("/*", staticDirectoryHandler(ui.DistDirFS, false), middleware.Gzip())
-
-		return nil
-	})
-}
-
-func setupNewPhotoNotifications(app *pocketbase.PocketBase, sns *notifications.ScheduledNotifications) {
-	app.OnModelAfterCreate().Add(func(e *core.ModelEvent) error {
-		if e.Model.TableName() == "photos" {
-			sns.SetUpdateAvailable()
-		}
 
 		return nil
 	})
