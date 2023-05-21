@@ -1,7 +1,8 @@
 package notifications
 
 import (
-	"github.com/go-co-op/gocron"
+	"github.com/ewhanson/bbdb/photos_queue"
+	"github.com/ewhanson/bbdb/scheduler"
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/models"
@@ -10,32 +11,36 @@ import (
 	"log"
 	"net/mail"
 	"strconv"
-	"time"
 )
 
 // ScheduledNotifications defines group of methods for tracking and sending
 // grouped email notifications on updated content
 type ScheduledNotifications struct {
-	scheduler    *gocron.Scheduler
-	shouldNotify bool
-	photoCount   int
-	app          *pocketbase.PocketBase
+	app       *pocketbase.PocketBase
+	scheduler *scheduler.Scheduler
+	pq        *photos_queue.PhotosQueue
 }
 
 // New runs initial setup for ScheduledNotifications and set up scheduled tasks
-func New(app *pocketbase.PocketBase) *ScheduledNotifications {
+func New(app *pocketbase.PocketBase, s *scheduler.Scheduler, pq *photos_queue.PhotosQueue) *ScheduledNotifications {
 	sns := &ScheduledNotifications{
-		scheduler: gocron.NewScheduler(time.UTC),
 		app:       app,
+		scheduler: s,
+		pq:        pq,
 	}
 
 	notificationTime := viper.GetString("notificationTime")
-	_, err := sns.scheduler.Every(1).Day().At(notificationTime).Do(func() {
-		if sns.shouldNotify {
-			err := sns.dispatchNotifications(app)
+	_, err := sns.scheduler.GetScheduler().Every(1).Day().At(notificationTime).Do(func() {
+		if sns.shouldNotify() {
+			err := sns.pq.CleanupNonPendingItems()
+			err = sns.dispatchNotifications(app)
 			if err != nil {
-				log.Print(err)
+				log.Println(err.Error())
 				return
+			}
+			err = pq.MarkItemsNotPending()
+			if err != nil {
+				log.Println(err.Error())
 			}
 		}
 	})
@@ -43,31 +48,12 @@ func New(app *pocketbase.PocketBase) *ScheduledNotifications {
 		return nil
 	}
 
-	sns.scheduler.StartAsync()
-
 	return sns
 }
 
-// SetUpdateAvailable flags that the next scheduled check should trigger notification emails
-func (sns *ScheduledNotifications) SetUpdateAvailable() {
-	sns.shouldNotify = true
-	sns.photoCount += 1
-}
+func (sns *ScheduledNotifications) shouldNotify() bool {
+	return sns.pq.HasPendingItems()
 
-// DebugDispatch manually triggers sending of notification emails
-func (sns *ScheduledNotifications) DebugDispatch(app *pocketbase.PocketBase) error {
-	return sns.dispatchNotifications(app)
-}
-
-// GetStatus returns info for dispatch debugging via API
-func (sns *ScheduledNotifications) GetStatus() interface{} {
-	return struct {
-		PhotoCount   int
-		ShouldNotify bool
-	}{
-		PhotoCount:   sns.photoCount,
-		ShouldNotify: sns.shouldNotify,
-	}
 }
 
 // dispatchNotifications gets a list of all subscribed email addresses and dispatches a notification email
@@ -85,8 +71,9 @@ func (sns *ScheduledNotifications) dispatchNotifications(app *pocketbase.PocketB
 	records := models.NewRecordsFromNullStringMaps(collection, rows)
 	successCount := 0
 	failCount := 0
+	photoCount, _ := sns.pq.GetPendingItemsCount()
 	for _, record := range records {
-		err = sns.sendUpdateEmail(record.GetString("email"), record.GetString("name"), record.GetId())
+		err = sns.sendUpdateEmail(record.GetString("email"), record.GetString("name"), record.GetId(), photoCount)
 		if err != nil {
 			failCount++
 			log.Println("[Mail error] ", err.Error())
@@ -94,11 +81,7 @@ func (sns *ScheduledNotifications) dispatchNotifications(app *pocketbase.PocketB
 			successCount++
 		}
 	}
-	log.Print("[Batch notification dispatch] Succeeded: " + strconv.Itoa(successCount) + ", Failed: " + strconv.Itoa(failCount) + ", Total: " + strconv.Itoa(successCount+failCount))
-
-	sns.shouldNotify = false
-	sns.photoCount = 0
-
+	log.Println("[Batch notification dispatch] Succeeded: " + strconv.Itoa(successCount) + ", Failed: " + strconv.Itoa(failCount) + ", Total: " + strconv.Itoa(successCount+failCount))
 	return nil
 }
 
@@ -125,10 +108,9 @@ func (sns *ScheduledNotifications) SendWelcomeEmail(emailAddress string, name st
 }
 
 // sendUpdateEmail fires off email via SMTP
-func (sns *ScheduledNotifications) sendUpdateEmail(emailAddress string, name string, userId string) error {
+func (sns *ScheduledNotifications) sendUpdateEmail(emailAddress string, name string, userId string, photoCount int) error {
 	m := sns.app.NewMailClient()
 
-	photoCount := sns.photoCount
 	photoNoun := "photo"
 	if photoCount > 1 {
 		photoNoun = "photos"
