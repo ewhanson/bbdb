@@ -1,4 +1,4 @@
-export function PhotoCard({ url, description, displayDate, altDate }) {
+export function PhotoCard({ url, description, displayDate, altDate, isNew }) {
   return (
     <div className="card card-compact bg-base-100 w-full sm:w-auto sm:max-w-md shadow-xl">
       {/* TODO: See if custom class "min-w-28rem is best approach*/}
@@ -15,7 +15,10 @@ export function PhotoCard({ url, description, displayDate, altDate }) {
             {displayDate}
           </div>
         </div>
-        <h2 className="card-title">{description}</h2>
+        <h2 className="card-title">
+          {description}
+          {isNew && <div className="badge badge-secondary">New</div>}
+        </h2>
       </div>
     </div>
   );

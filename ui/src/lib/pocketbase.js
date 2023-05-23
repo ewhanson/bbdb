@@ -41,6 +41,7 @@ export const getPhotos = async (page, sortOrder, perPage = 10) => {
       .collection("photos")
       .getList(page, perPage, {
         sort: sortOrder,
+        expand: "photos_queue(photo)",
       });
 
     const maxPages = Math.ceil(photoResults.totalItems / photoResults.perPage);
@@ -62,7 +63,8 @@ export const getPhotos = async (page, sortOrder, perPage = 10) => {
         altDate: getLocalDateFromFormat(
           item.dateTaken === "" ? item.created : item.dateTaken
         ),
-        url: getPocketBaseFileUrl(item.id, item.file, item.orientation),
+        url: getPocketBaseFileUrl(item.id, item.file),
+        isNew: item.expand["photos_queue(photo)"] !== undefined,
       };
     });
 

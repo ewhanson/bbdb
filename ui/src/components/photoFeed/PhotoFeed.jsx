@@ -115,6 +115,7 @@ export function PhotoFeed() {
             displayDate={photo.displayDate}
             altDate={photo.altDate}
             description={photo.description}
+            isNew={photo.isNew}
           />
         );
       })}

@@ -45,6 +45,9 @@ test("Can upload new photo", async ({ page }, workerInfo) => {
   });
   await expect(photoHeading).toBeVisible();
 
+  const newBadge = await photoHeading.getByText("New");
+  await expect(newBadge).toBeVisible();
+
   const dateBadge = await page.getByText("Dec 14, 2022");
   await expect(dateBadge).toBeVisible();
   await expect(dateBadge).toHaveAttribute(

@@ -116,7 +116,7 @@ func (pq *PhotosQueue) performOutdatedNewPhotosCleanup() {
 	records, err := pq.app.Dao().FindRecordsByExpr("photos_queue",
 		dbx.NewExp("created <= datetime('now', '-7 days')"),
 	)
-	if err != nil {
+	if err != nil && err.Error() != "sql: no rows in result set" {
 		log.Println("[Error finding outdated photos queue data] ", err.Error())
 		return
 	}
