@@ -38,6 +38,7 @@ export function Navbar() {
         <div className="dropdown dropdown-end">
           <label tabIndex="0" className="btn btn-square btn-ghost">
             <Icon name={constants.ICONS.DOTS_HORIZONTAL} />
+            {/*<div className="badge badge-accent badge-xs ml-0.5 self-start"></div>*/}
           </label>
           <ul
             tabIndex="0"

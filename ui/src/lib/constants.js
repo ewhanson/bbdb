@@ -7,10 +7,14 @@ export const constants = {
     NOTIFICATIONS: "/signup",
     WHATS_NEW: "/whatsnew",
     UNSUBSCRIBE: "/unsubscribe",
+    TAG: "/tags/:tagName",
     FOUR_OH_FOUR: "/404",
     UPLOADER: {
       LOGIN: "/uploader/login",
       DASHBOARD: "/uploader/dashboard",
+    },
+    getTagRoute: function (tagName) {
+      return "/tags/" + tagName;
     },
   },
   ICONS: {
@@ -19,9 +23,5 @@ export const constants = {
   },
   COOKIE_KEYS: {
     SEEN_NOTIFICATION_PAGE: "seenNotificationPage",
-  },
-  SORT_ORDER: {
-    DATE_TAKEN: "-dateTaken",
-    CREATED: "-created",
   },
 };

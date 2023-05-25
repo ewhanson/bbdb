@@ -13,6 +13,7 @@ import { NotificationsSignup } from "./components/routes/NotificationsSignup.jsx
 import { Unsubscribe } from "./components/routes/Unsubscribe.jsx";
 import { UploaderLogin } from "./components/routes/UploaderLogin.jsx";
 import { UploaderDashboard } from "./components/routes/UploaderDashboard.jsx";
+import { TagFeed } from "./components/routes/TagFeed.jsx";
 
 export function App() {
   const [authData, setAuthData] = useState({
@@ -31,6 +32,7 @@ export function App() {
         <Home path={constants.ROUTES.HOME} />
         <Login path={constants.ROUTES.LOGIN} />
         <Feed path={constants.ROUTES.FEED} />
+        <TagFeed path={constants.ROUTES.TAG} />
         <About path={constants.ROUTES.ABOUT} />
         <NotificationsSignup path={constants.ROUTES.NOTIFICATIONS} />
         <Unsubscribe path={constants.ROUTES.UNSUBSCRIBE} />

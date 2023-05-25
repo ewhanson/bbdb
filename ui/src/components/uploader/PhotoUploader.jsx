@@ -1,6 +1,6 @@
 import { useUploaderAuthProtected } from "../../lib/customHooks.js";
-import { useState } from "preact/hooks";
-import { postPhoto } from "../../lib/pocketbase.js";
+import { useEffect, useState } from "preact/hooks";
+import { getTagIdsFromString, postPhoto } from "../../lib/pocketbase.js";
 import { tryGetDateTimeFromImage } from "../../lib/helpers.js";
 
 export function PhotoUploader() {
@@ -8,6 +8,7 @@ export function PhotoUploader() {
 
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
+  const [tags, setTags] = useState("");
   const [dateTime, setDateTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,7 +21,7 @@ export function PhotoUploader() {
     setSuccessMessage("");
 
     try {
-      await postPhoto(description, file, dateTime);
+      await postPhoto(description, file, dateTime, tags);
       setIsSubmitting(false);
       setSuccessMessage("Photo upload successful!");
       setDescription("");
@@ -122,6 +123,21 @@ export function PhotoUploader() {
             }}
             className="file-input file-input-bordered w-full"
           />
+
+          {/* Tags */}
+          <div className="form-control w-full max-w-lg">
+            <label className="label">
+              <span className="label-text">Tags</span>
+            </label>
+            <input
+              type="text"
+              value={tags}
+              onInput={(e) => setTags(e.target.value)}
+              placeholder="Enter a comma-separated list"
+              className="input input-bordered w-full"
+              required
+            />
+          </div>
 
           <div className="card-actions justify-end pt-4">
             <button
