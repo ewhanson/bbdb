@@ -7,7 +7,7 @@ require (
 	github.com/go-co-op/gocron v1.18.0
 	github.com/labstack/echo/v5 v5.0.0-20220201181537-ed2888cfa198
 	github.com/pocketbase/dbx v1.10.0
-	github.com/pocketbase/pocketbase v0.16.0
+	github.com/pocketbase/pocketbase v0.16.3
 	github.com/spf13/viper v1.14.0
 )
 

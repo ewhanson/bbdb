@@ -3,6 +3,7 @@ import { AuthContext } from "./AuthContextProvider.js";
 import { route } from "preact-router";
 import { constants } from "./constants.js";
 import Cookies from "cookies-js";
+import { getUniqueArrayBy } from "./helpers.js";
 
 export const useViewerAuthProtected = () => {
   const [authData] = useContext(AuthContext);
@@ -67,4 +68,40 @@ export const useInfiniteScroll = (callback, shouldStopExecution) => {
   }
 
   return [isFetching, setIsFetching];
+};
+
+export const useGetPhotos = (getPhotos) => {
+  const [page, setPage] = useState(0);
+
+  const [photos, setPhotos] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLastPage, setIsLastPage] = useState(false);
+
+  // set isFetching to trigger loading photos on page load
+  useEffect(() => {
+    setIsFetching(true);
+  }, []);
+
+  const [isFetching, setIsFetching] = useInfiniteScroll(async () => {
+    if (isLastPage) return;
+
+    const pageToCheck = page + 1;
+    try {
+      const results = await getPhotos(pageToCheck);
+      const combinedPhotos = [...photos].concat(results.photoData);
+      const sanitizedCombinedPhotos = getUniqueArrayBy(combinedPhotos, "id");
+
+      setIsLastPage(results.page >= results.maxPages);
+
+      setPage(results.page);
+      setErrorMessage("");
+      setPhotos(sanitizedCombinedPhotos);
+    } catch (e) {
+      setErrorMessage(e.message);
+    } finally {
+      setIsFetching(false);
+    }
+  }, isLastPage);
+
+  return [photos, errorMessage, isLastPage, isFetching, setIsFetching];
 };

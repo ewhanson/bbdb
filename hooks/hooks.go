@@ -7,6 +7,7 @@ import (
 	"github.com/ewhanson/bbdb/notifications"
 	"github.com/ewhanson/bbdb/photos_queue"
 	"github.com/ewhanson/bbdb/scheduler"
+	"github.com/ewhanson/bbdb/tags"
 	"github.com/ewhanson/bbdb/ui"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
@@ -31,6 +32,7 @@ func Init(app *pocketbase.PocketBase) {
 	extendRootCmd(app)
 
 	addRoutes(app)
+	tags.AddHooks(app)
 	downloadWebFriendlyImages(app)
 
 	s := scheduler.New()
