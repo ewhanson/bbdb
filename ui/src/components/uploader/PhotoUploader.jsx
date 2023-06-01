@@ -133,9 +133,8 @@ export function PhotoUploader() {
               type="text"
               value={tags}
               onInput={(e) => setTags(e.target.value)}
-              placeholder="Enter a comma-separated list"
+              placeholder="Enter a comma-separated list (no #)"
               className="input input-bordered w-full"
-              required
             />
           </div>
 

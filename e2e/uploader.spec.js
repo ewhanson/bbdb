@@ -30,9 +30,9 @@ test("Can upload new photo", async ({ page }, workerInfo) => {
   await page
     .locator('input[type="file"]')
     .setInputFiles("./e2e/fixtures/mushroom.jpeg");
-  await page.getByPlaceholder("Enter a comma-separated list").click();
+  await page.getByPlaceholder("ENter a comma-separated list (no #)").click();
   await page
-    .getByPlaceholder("Enter a comma-separated list")
+    .getByPlaceholder("ENter a comma-separated list (no #)")
     .fill("testTag1, testTag2");
   await page.getByRole("button", { name: "Submit" }).click();
   await expect(page.getByText("Photo upload successful!")).toBeVisible();
