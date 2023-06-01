@@ -1,6 +1,6 @@
 import { useUploaderAuthProtected } from "../../lib/customHooks.js";
-import { useEffect, useState } from "preact/hooks";
-import { getTagIdsFromString, postPhoto } from "../../lib/pocketbase.js";
+import { useState } from "preact/hooks";
+import { postPhoto } from "../../lib/pocketbase.js";
 import { tryGetDateTimeFromImage } from "../../lib/helpers.js";
 
 export function PhotoUploader() {
