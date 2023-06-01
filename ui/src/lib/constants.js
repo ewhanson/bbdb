@@ -5,7 +5,7 @@ export const constants = {
     FEED: "/feed",
     ABOUT: "/about",
     NOTIFICATIONS: "/signup",
-    WHATS_NEW: "/whatsnew",
+    WHATS_NEW: "/whats-new",
     UNSUBSCRIBE: "/unsubscribe",
     TAG: "/tags/:tagName",
     FOUR_OH_FOUR: "/404",

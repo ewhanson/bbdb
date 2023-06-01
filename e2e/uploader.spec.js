@@ -32,12 +32,16 @@ test("Can upload new photo", async ({ page }, workerInfo) => {
     .setInputFiles("./e2e/fixtures/mushroom.jpeg");
   await page.getByPlaceholder("ENter a comma-separated list (no #)").click();
   await page
-    .getByPlaceholder("ENter a comma-separated list (no #)")
+    .getByPlaceholder("Enter a comma-separated list (no #)")
     .fill("testTag1, testTag2");
   await page.getByRole("button", { name: "Submit" }).click();
   await expect(page.getByText("Photo upload successful!")).toBeVisible();
 
   await page.getByRole("link", { name: /Babygramz/ }).click();
+
+  await page.locator("label").click();
+  const photoFeedLink = await page.getByRole("link", { name: /Photo feed/ });
+  await expect(photoFeedLink).toHaveText(/updated/);
 
   const photo = await page.getByRole("img", {
     name: `Shows Forest mushrooms - ${workerInfo.project.name}`,

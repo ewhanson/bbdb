@@ -8,6 +8,8 @@ export default defineConfig(({ command, mode }) => {
     envDir: command === "build" ? "../" : ".",
     define: {
       APP_VERSION: JSON.stringify(process.env.npm_package_version),
+      APP_BUILD_DATE: Date.now(),
     },
+    assetsInclude: ["**/*.md"],
   };
 });

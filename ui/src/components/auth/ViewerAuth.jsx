@@ -74,6 +74,13 @@ export function ViewerAuth() {
               placeholder="Password"
               className="input input-bordered w-full max-w-md"
             />
+            <label className="label">
+              <span className="label-text-alt">
+                <a className="link" href={constants.ROUTES.UPLOADER.LOGIN}>
+                  Access uploader login
+                </a>
+              </span>
+            </label>
           </div>
           <div className="card-actions justify-end">
             <button

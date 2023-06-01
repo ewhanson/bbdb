@@ -203,6 +203,14 @@ export const getTagIdsFromString = async (tags) => {
   return tagIds;
 };
 
+export const getHasNewPhotos = async () => {
+  const records = await client.collection("photos_queue").getFullList({
+    fields: "id",
+  });
+
+  return records["totalItems"] > 0;
+};
+
 /**
  * Helper function to take string to array
  *

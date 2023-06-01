@@ -21,3 +21,18 @@ test("Unauthenticated users cannot access auth-protected routes", async ({
   await page.goto("/uploader/dashboard");
   await expect(page).toHaveURL("/uploader/login");
 });
+
+test("Can see what's new page", async ({ page }) => {
+  await page.goto("/");
+
+  await page.locator("label").click();
+  const whatsNewLink = await page.getByRole("link", { name: /What's new/ });
+  await expect(whatsNewLink).toHaveText(/updated/);
+
+  await whatsNewLink.click();
+
+  const heading = await page.getByRole("heading", {
+    name: "What's new",
+  });
+  await expect(heading).toBeVisible();
+});
