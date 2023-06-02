@@ -20,7 +20,7 @@ export function PhotoCard({
       </figure>
       <div className="card-body">
         <div className="card-actions justify-end">
-          <div title={altDate} className="badge bae-outline badge-sm">
+          <div title={altDate} className="badge badge-outline badge-sm">
             {displayDate}
           </div>
         </div>

@@ -55,7 +55,7 @@ export function Navbar() {
           <label tabIndex="0" className="btn btn-square btn-ghost">
             <Icon name={constants.ICONS.DOTS_HORIZONTAL} />
             {shouldDisplayUpdateBadge && (
-              <div className="badge badge-accent badge-xs ml-0.5 self-start"></div>
+              <div className="badge badge-secondary badge-xs ml-0.5 mt-2 self-start"></div>
             )}
           </label>
           <ul
@@ -66,7 +66,9 @@ export function Navbar() {
               <li>
                 <a className={"justify-between"} href={constants.ROUTES.FEED}>
                   Photo feed
-                  <span className="badge badge-accent badge-sm">updated</span>
+                  <span className="badge badge-secondary badge-sm">
+                    updated
+                  </span>
                 </a>
               </li>
             )}
@@ -80,7 +82,9 @@ export function Navbar() {
               >
                 What's new
                 {!isBuildOrderThanOneWeek() && (
-                  <span className="badge badge-accent badge-sm">updated</span>
+                  <span className="badge badge-secondary badge-sm">
+                    updated
+                  </span>
                 )}
               </a>
             </li>
