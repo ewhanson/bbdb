@@ -1,0 +1,8 @@
+build
+dist
+node_modules
+pb_data
+playwright-report
+.git
+.secrets
+.env

@@ -1,0 +1,10 @@
+version: '3'
+services:
+  bbdb:
+    build: .
+    ports:
+      - "8090:8090"
+    volumes:
+      - "./build/pb_data:/app/pb_data"
+      - "./build/logs:/app/logs"
+      - "./build/migrations:/app/migrations"
