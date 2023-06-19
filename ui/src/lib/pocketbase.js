@@ -208,7 +208,7 @@ export const getHasNewPhotos = async () => {
     fields: "id",
   });
 
-  return records["totalItems"] > 0;
+  return records.length > 0;
 };
 
 /**

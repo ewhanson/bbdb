@@ -15,7 +15,9 @@ export function Navbar() {
   const [hasNewPhotos, setHasNewPhotos] = useState(false);
 
   useEffect(() => {
-    getHasNewPhotos().then((res) => setHasNewPhotos(res));
+    getHasNewPhotos().then((res) => {
+      setHasNewPhotos(res);
+    });
   }, []);
 
   const doLogout = () => {
