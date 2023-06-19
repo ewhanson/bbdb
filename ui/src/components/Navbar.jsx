@@ -52,12 +52,16 @@ export function Navbar() {
       </div>
       <div className="flex-none">
         <div className="dropdown dropdown-end">
-          <label tabIndex="0" className="btn btn-square btn-ghost">
-            <Icon name={constants.ICONS.DOTS_HORIZONTAL} />
+          <div className="indicator">
             {shouldDisplayUpdateBadge && (
-              <div className="badge badge-secondary badge-xs ml-0.5 mt-2 self-start"></div>
+              <div className="badge badge-secondary badge-xs indicator-item mt-1 mr-1"></div>
             )}
-          </label>
+            <label tabIndex="0" className="btn btn-square btn-ghost">
+              <div>
+                <Icon name={constants.ICONS.DOTS_HORIZONTAL} />
+              </div>
+            </label>
+          </div>
           <ul
             tabIndex="0"
             className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
