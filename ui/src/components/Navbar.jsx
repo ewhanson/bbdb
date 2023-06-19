@@ -70,9 +70,11 @@ export function Navbar() {
               <li>
                 <a className={"justify-between"} href={constants.ROUTES.FEED}>
                   Photo feed
-                  <span className="badge badge-secondary badge-sm">
-                    updated
-                  </span>
+                  {hasNewPhotos && (
+                    <span className="badge badge-secondary badge-sm">
+                      updated
+                    </span>
+                  )}
                 </a>
               </li>
             )}
