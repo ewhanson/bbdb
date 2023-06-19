@@ -1,6 +1,6 @@
 # What's new
 
-## 2023-06-01
+## 2023-06-19
 
 The biggest Babygramz update yet!
 
