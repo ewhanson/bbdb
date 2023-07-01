@@ -10,20 +10,20 @@
   },
   "dependencies": {
     "cookies-js": "^1.2.3",
-    "exifreader": "^4.10.0",
+    "exifreader": "^4.12.1",
     "luxon": "^3.2.1",
-    "markdown-to-jsx": "^7.2.0",
-    "pocketbase": "^0.15.0",
-    "preact": "^10.11.3",
+    "markdown-to-jsx": "^7.2.1",
+    "pocketbase": "^0.15.2",
+    "preact": "^10.15.1",
     "preact-router": "^4.1.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
     "@tailwindcss/typography": "^0.5.9",
     "autoprefixer": "^10.4.13",
-    "daisyui": "^2.49.0",
+    "daisyui": "^2.52.0",
     "prettier": "^2.8.3",
     "tailwindcss": "^3.2.4",
-    "vite": "^4.3.8"
+    "vite": "^4.3.9"
   }
 }
