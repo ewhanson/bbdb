@@ -3,6 +3,7 @@ export const constants = {
     HOME: "/",
     LOGIN: "/login",
     FEED: "/feed",
+    PHOTO: "/photos/:photoId",
     ABOUT: "/about",
     NOTIFICATIONS: "/signup",
     WHATS_NEW: "/whats-new",
@@ -15,6 +16,9 @@ export const constants = {
     },
     getTagRoute: function (tagName) {
       return "/tags/" + tagName;
+    },
+    getPhotoRoute: function (photoId) {
+      return "/photos/" + photoId;
     },
   },
   ICONS: {

@@ -15,6 +15,7 @@ import { UploaderLogin } from "./components/routes/UploaderLogin.jsx";
 import { UploaderDashboard } from "./components/routes/UploaderDashboard.jsx";
 import { TagFeed } from "./components/routes/TagFeed.jsx";
 import { WhatsNew } from "./components/routes/WhatsNew.jsx";
+import { SinglePhoto } from "./components/routes/SinglePhoto.jsx";
 
 export function App() {
   const [authData, setAuthData] = useState({
@@ -33,6 +34,7 @@ export function App() {
         <Home path={constants.ROUTES.HOME} />
         <Login path={constants.ROUTES.LOGIN} />
         <Feed path={constants.ROUTES.FEED} />
+        <SinglePhoto path={constants.ROUTES.PHOTO} />
         <TagFeed path={constants.ROUTES.TAG} />
         <About path={constants.ROUTES.ABOUT} />
         <WhatsNew path={constants.ROUTES.WHATS_NEW} />

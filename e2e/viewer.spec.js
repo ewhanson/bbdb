@@ -25,6 +25,12 @@ test("Can see photos in feed", async ({ page }) => {
   const dateBadge = await page.getByText("Apr 6, 2023");
   await expect(dateBadge).toBeVisible();
   await expect(dateBadge).toHaveAttribute("title", /4\/6\/2023, \d{1,2}:55 PM/);
+
+  await page.getByRole("link", { name: "Brewing coffee" }).click();
+  const singlePhoto = await page.getByRole("img", {
+    name: "Shows Brewing Coffee",
+  });
+  await expect(singlePhoto).toBeVisible();
 });
 
 test("Cannot access uploader area", async ({ page }) => {

@@ -1,6 +1,7 @@
 import { constants } from "../../lib/constants.js";
 
 export function PhotoCard({
+  id,
   url,
   description,
   displayDate,
@@ -25,7 +26,7 @@ export function PhotoCard({
           </div>
         </div>
         <h2 className="card-title">
-          {description}
+          <a href={constants.ROUTES.getPhotoRoute(id)}>{description}</a>
           {isNew && <span className="badge badge-secondary">New</span>}
         </h2>
         <div className="card-actions">

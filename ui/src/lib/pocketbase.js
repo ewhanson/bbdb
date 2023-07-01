@@ -57,25 +57,7 @@ export const getPhotosByTag = async (tagName, page, perPage = 10) => {
     }
 
     const photoData = photoResults.items.map((item) => {
-      return {
-        id: item.id,
-        description: item.description,
-        displayDate: getDisplayDateFromFormat(
-          item.dateTaken === "" ? item.created : item.dateTaken
-        ),
-        altDate: getLocalDateFromFormat(
-          item.dateTaken === "" ? item.created : item.dateTaken
-        ),
-        url: getPocketBaseFileUrl(item.id, item.file),
-        isNew: item.expand["photos_queue(photo)"] !== undefined,
-        tags:
-          item.expand["tags"]?.map((tag) => {
-            return {
-              id: tag.id,
-              name: tag.name,
-            };
-          }) ?? [],
-      };
+      return mapPhotoDataFromResults(item);
     });
 
     return {
@@ -111,25 +93,7 @@ export const getMainFeedPhotos = async (page, perPage = 10) => {
     }
 
     const photoData = photoResults.items.map((item) => {
-      return {
-        id: item.id,
-        description: item.description,
-        displayDate: getDisplayDateFromFormat(
-          item.dateTaken === "" ? item.created : item.dateTaken
-        ),
-        altDate: getLocalDateFromFormat(
-          item.dateTaken === "" ? item.created : item.dateTaken
-        ),
-        url: getPocketBaseFileUrl(item.id, item.file),
-        isNew: item.expand["photos_queue(photo)"] !== undefined,
-        tags:
-          item.expand["tags"]?.map((tag) => {
-            return {
-              id: tag.id,
-              name: tag.name,
-            };
-          }) ?? [],
-      };
+      return mapPhotoDataFromResults(item);
     });
 
     return {
@@ -137,6 +101,22 @@ export const getMainFeedPhotos = async (page, perPage = 10) => {
       maxPages,
       photoData,
     };
+  } catch (e) {
+    throw e;
+  } finally {
+    await client.collection("users").authRefresh();
+  }
+};
+
+export const getPhotoById = async (id) => {
+  try {
+    const photoResult = await client.collection("photos").getOne(id, {
+      expand: "photos_queue(photo),tags",
+      fields:
+        "created,dateTaken,description,file,id,expand.photos_queue(photo).id,expand.tags.id,expand.tags.name",
+    });
+
+    return mapPhotoDataFromResults(photoResult);
   } catch (e) {
     throw e;
   } finally {
@@ -219,4 +199,26 @@ export const getHasNewPhotos = async () => {
  */
 const parseTagsString = (tagsString) => {
   return tagsString.split(",").map((item) => item.trim());
+};
+
+const mapPhotoDataFromResults = (item) => {
+  return {
+    id: item.id,
+    description: item.description,
+    displayDate: getDisplayDateFromFormat(
+      item.dateTaken === "" ? item.created : item.dateTaken
+    ),
+    altDate: getLocalDateFromFormat(
+      item.dateTaken === "" ? item.created : item.dateTaken
+    ),
+    url: getPocketBaseFileUrl(item.id, item.file),
+    isNew: item.expand["photos_queue(photo)"] !== undefined,
+    tags:
+      item.expand["tags"]?.map((tag) => {
+        return {
+          id: tag.id,
+          name: tag.name,
+        };
+      }) ?? [],
+  };
 };

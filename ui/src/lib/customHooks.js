@@ -4,6 +4,7 @@ import { route } from "preact-router";
 import { constants } from "./constants.js";
 import Cookies from "cookies-js";
 import { getUniqueArrayBy } from "./helpers.js";
+import { getPhotoById } from "./pocketbase.js";
 
 export const useViewerAuthProtected = () => {
   const [authData] = useContext(AuthContext);
@@ -68,6 +69,31 @@ export const useInfiniteScroll = (callback, shouldStopExecution) => {
   }
 
   return [isFetching, setIsFetching];
+};
+
+export const useGetPhoto = (photoId) => {
+  const [photo, setPhoto] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isFetching, setIsFetching] = useState(true);
+
+  useEffect(() => {
+    const getPhoto = async () => {
+      return await getPhotoById(photoId);
+    };
+
+    getPhoto()
+      .then((photo) => {
+        setPhoto(photo);
+        setErrorMessage("");
+        setIsFetching(false);
+      })
+      .catch((e) => {
+        setErrorMessage(e.message);
+        setIsFetching(false);
+      });
+  }, []);
+
+  return [photo, errorMessage, isFetching];
 };
 
 export const useGetPhotos = (getPhotos) => {

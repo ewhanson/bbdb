@@ -37,6 +37,7 @@ export function PhotoFeed({
         return (
           <PhotoCard
             key={photo.id}
+            id={photo.id}
             url={photo.url}
             displayDate={photo.displayDate}
             altDate={photo.altDate}
