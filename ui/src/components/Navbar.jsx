@@ -38,10 +38,6 @@ export function Navbar() {
     return buildTime < oneWeekAgo;
   };
 
-  const shouldDisplayUpdateBadge = () => {
-    return !isBuildOrderThanOneWeek() || hasNewPhotos;
-  };
-
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
@@ -55,7 +51,7 @@ export function Navbar() {
       <div className="flex-none">
         <div className="dropdown dropdown-end">
           <div className="indicator">
-            {shouldDisplayUpdateBadge() && (
+            {hasNewPhotos && (
               <div className="badge badge-secondary badge-xs indicator-item mt-1 mr-1"></div>
             )}
             <label tabIndex="0" className="btn btn-square btn-ghost">
