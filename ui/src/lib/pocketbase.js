@@ -198,7 +198,10 @@ export const getHasNewPhotos = async () => {
  * @return {string[]}
  */
 const parseTagsString = (tagsString) => {
-  return tagsString.split(",").map((item) => item.trim());
+  return tagsString
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item !== "");
 };
 
 const mapPhotoDataFromResults = (item) => {
