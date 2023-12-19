@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\User;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enum\UserRoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,6 +53,11 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->isPrivilegedUser();
+    }
+
+    public function isPrivilegedUser(): bool
     {
         return $this->role == UserRoleEnum::ADMIN || $this->role == UserRoleEnum::EDITOR;
     }

@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Enum\UserRoleEnum;
-use App\Models\User;
+use App\User\User;
+use App\User\UserRoleEnum;
 use Illuminate\Console\Command;
 
 class SetUserRole extends Command
