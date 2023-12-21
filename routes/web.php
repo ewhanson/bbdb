@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', \App\Livewire\Pages\Landing::class)->middleware('guest')->name('landing');
+Route::get('/login', \App\Livewire\Pages\Login::class)->name('login');
+Route::get('/feed', \App\Livewire\Pages\Feed::class)->name('feed')->middleware('auth:web');
