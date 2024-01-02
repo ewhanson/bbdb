@@ -1,6 +1,5 @@
 <div class="navbar bg-base-100">
     <div class="flex-1">
-        {{-- TODO: Add links --}}
         <a
             @auth
                 href="/feed"
