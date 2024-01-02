@@ -10,7 +10,7 @@
             </div>
         </div>
         <h2 class="card-title">
-            <a href="TODO: photo route" wire:navigate>{{ $post->description }}</a>
+            <a href="{{ route('single-photo', ['post' => $post->id]) }}" wire:navigate>{{ $post->description }}</a>
             @if ($post->isNew())
                 <span class="badge badge-secondary">New</span>
             @endif

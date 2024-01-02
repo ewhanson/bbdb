@@ -12,6 +12,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Tags\HasTags;
 
 /**
+ * @property string $id
  * @property string $description
  * @property Carbon $date_taken
  * @property Carbon $created_at

@@ -18,3 +18,4 @@ Route::get('/login', \App\Livewire\Pages\Login::class)->name('login');
 Route::get('/about', \App\Livewire\Pages\About::class)->name('about');
 Route::get('whats-new', \App\Livewire\Pages\WhatsNew::class)->name('whats-new');
 Route::get('/feed', \App\Livewire\Pages\Feed::class)->name('feed')->middleware('auth:web');
+Route::get('photos/{post}', \App\Livewire\Pages\SinglePhoto::class)->name('single-photo')->middleware('auth:web');
