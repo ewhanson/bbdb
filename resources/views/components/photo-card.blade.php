@@ -17,7 +17,7 @@
         </h2>
         <div class="card-actions">
             @foreach($post->tags as $tag)
-                <a class="link link-hover" href="TODO: Tag route">
+                <a class="link link-hover" href="{{ route('tag', ['tag' => $tag->id]) }}" wire:navigate>
                     #{{ $tag->name }}
                 </a>
             @endforeach
