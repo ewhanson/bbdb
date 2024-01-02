@@ -1,6 +1,6 @@
 <x-main-content-layout>
     @foreach($posts as $post)
-        <x-photo-card :post="$post"/>
+        <x-photo-card wire:key="{{ $post->id }}" :post="$post"/>
     @endforeach
     @if(!$isLastPage)
         <button wire:click="loadMore" class="btn btn-outline btn-sm">
