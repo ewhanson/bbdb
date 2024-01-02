@@ -1,3 +1,14 @@
-<div>
-    {{-- Care about people's approval and you will be their prisoner. --}}
-</div>
+<x-main-content-layout>
+    @foreach($posts as $post)
+        <x-photo-card :post="$post"/>
+    @endforeach
+    @if(!$isLastPage)
+        <button wire:click="loadMore" class="btn btn-outline btn-sm">
+            Load more photos
+        </button>
+    @endif
+    <div wire:loading wire:target="loadMore">
+        <span class="loading loading-dots loading-sm"></span>
+    </div>
+</x-main-content-layout>
+

@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            // TODO: Files
-            // TODO: Tags
             $table->dateTimeTz('date_taken');
             $table->timestamps();
         });
