@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Post\Post;
-use App\User\User;
+use App\Models\Post;
+use App\Models\User;
 
 class PostPolicy
 {

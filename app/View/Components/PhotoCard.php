@@ -2,7 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Post\Post;
+use App\Models\Post;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -22,8 +22,7 @@ class PhotoCard extends Component
      */
     public function __construct(
         public Post $post
-    )
-    {
+    ) {
         $this->altDate = $post->date_taken->format('Y-m-d, g:i a');
         if ($post->date_taken->lt(Carbon::now()->subWeek())) {
             $this->displayDate = $this->post->date_taken->format('M j, Y');

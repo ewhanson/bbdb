@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Post;
+namespace App\Models;
 
+use App\Events\PostCreated;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -31,6 +33,10 @@ class Post extends Model implements HasMedia
         'date_taken' => 'date',
     ];
 
+    protected $dispatchesEvents = [
+        'created' => PostCreated::class,
+    ];
+
     // TODO: Consider removing 'preview' conversion and instead use reasonably sized responsive image instead
     public function registerMediaConversions(?Media $media = null): void
     {
@@ -40,7 +46,15 @@ class Post extends Model implements HasMedia
 
     public function isNew(): bool
     {
-        // TODO: Implement properly
-        return true;
+        if ($this->postStatus()->first()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function postStatus(): HasOne
+    {
+        return $this->hasOne(PostStatus::class);
     }
 }

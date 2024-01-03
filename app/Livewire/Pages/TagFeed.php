@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Pages;
 
-use App\Post\Post;
+use App\Models\Post;
 use Livewire\Component;
 use Spatie\Tags\Tag;
 

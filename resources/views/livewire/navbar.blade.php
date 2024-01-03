@@ -49,7 +49,7 @@
                 <li>
                     <a href="/whats-new" wire:navigate class="justify-between">
                         What's new
-                        @if($isBuildOlderThanOneWeek)
+                        @if($lastUpdateOlderThanOneWeek)
                             <span class="badge badge-secondary badge-sm">
                                 updated
                               </span>
