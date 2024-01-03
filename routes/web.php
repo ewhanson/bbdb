@@ -20,3 +20,5 @@ Route::get('whats-new', \App\Livewire\Pages\WhatsNew::class)->name('whats-new');
 Route::get('/feed', \App\Livewire\Pages\Feed::class)->name('feed')->middleware('auth:web');
 Route::get('photos/{post}', \App\Livewire\Pages\SinglePhoto::class)->name('single-photo')->middleware('auth:web');
 Route::get('tags/{tag}', \App\Livewire\Pages\TagFeed::class)->name('tag')->middleware('auth:web');
+Route::get('/signup', \App\Livewire\Pages\NotificationsSignup::class)->name('signup')->middleware('auth:web');
+Route::get('/unsubscribe/{id}', \App\Livewire\Pages\Unsubscribe::class)->name('unsubscribe');
