@@ -1,8 +1,9 @@
 <?php
 
-namespace App\User;
+namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\User\UserRoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

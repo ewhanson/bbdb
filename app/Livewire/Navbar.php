@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Pages\Landing;
+use App\Models\PostStatus;
 use Livewire\Component;
 
 class Navbar extends Component
@@ -18,17 +19,16 @@ class Navbar extends Component
         return view('livewire.navbar')
             ->with([
                 'hasNewPhotos' => $this->hasNewPhotos(),
-                'isBuildOlderThanOneWeek' => $this->isBuildOlderThanOneWeek(),
+                'lastUpdateOlderThanOneWeek' => $this->lastUpdateOlderThanOneWeek(),
             ]);
     }
 
     private function hasNewPhotos(): bool
     {
-        // TODO: Implement
-        return true;
+        return PostStatus::all()->count() > 0;
     }
 
-    private function isBuildOlderThanOneWeek(): bool
+    private function lastUpdateOlderThanOneWeek(): bool
     {
         // TODO: Implement
         return false;

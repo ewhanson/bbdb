@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\PostCreated;
 use App\Events\SubscriberCreated;
+use App\Listeners\MakePostStatus;
 use App\Listeners\SendNotificationsSignupEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -16,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+        PostCreated::class => [
+            MakePostStatus::class,
+        ],
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
