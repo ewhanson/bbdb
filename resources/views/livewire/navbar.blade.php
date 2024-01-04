@@ -62,6 +62,11 @@
                             Notifications signup
                         </a>
                     </li>
+                        @if(auth()->user()->isPrivilegedUser())
+                            <li>
+                                <a href="/admin">Admin Panel</a>
+                            </li>
+                        @endif
                 @endauth
                 <li>
                     @auth
