@@ -4,11 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
+use App\Post\DateTimeTZFromExifAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PostResource extends Resource
 {
@@ -23,11 +25,18 @@ class PostResource extends Resource
                 Forms\Components\TextInput::make('description')
                     ->required(),
                 Forms\Components\DateTimePicker::make('date_taken')
-                    ->required(),
+                    ->helperText('The app will attempt to auto-add the date taken from the photo metadata.'),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('photo')
+                    ->live()
                     ->conversion('preview')
                     ->responsiveImages()
-                    ->required(),
+                    ->required()
+                    ->afterStateUpdated(function (Forms\Set $set, TemporaryUploadedFile $state) {
+                        $maybeDateTaken = (new DateTimeTZFromExifAction($state->getRealPath()))->execute();
+                        if ($maybeDateTaken !== null) {
+                            $set('date_taken', $maybeDateTaken->toDateTimeLocalString());
+                        }
+                    }),
                 Forms\Components\SpatieTagsInput::make('tags'),
             ]);
     }
