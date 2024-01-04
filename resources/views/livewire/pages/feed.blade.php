@@ -1,4 +1,7 @@
 <x-main-content-layout>
+    @if(count($posts) === 0)
+        🤷 Oops... No photos found
+    @endif
     @foreach($posts as $post)
         <x-photo-card wire:key="{{ $post->id }}" :post="$post"/>
     @endforeach
