@@ -17,8 +17,17 @@ class TagFeed extends Component
 
     public bool $isLastPage = false;
 
-    public function mount(Tag $tag)
+    public function mount(string $slug)
     {
+        $tag = Tag::findFromString($slug);
+
+        if ($tag === null) {
+            $this->isLastPage = true;
+            $this->posts = [];
+            $this->tagName = '';
+
+            return;
+        }
         $results = Post::withAnyTags([$tag->name])->paginate(10, ['*'], 'page', $this->page);
         $this->isLastPage = $results->onLastPage();
         $this->posts = $results->items();
