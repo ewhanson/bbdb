@@ -1,5 +1,8 @@
 <x-main-content-layout>
     <h1 class="text-2xl font-bold mb-4">#{{ $tagName }}</h1>
+    @if(count($posts) === 0)
+        🤷 Oops... No photos found
+    @endif
     @foreach($posts as $post)
         <x-photo-card wire:key="{{ $post->id }}" :post="$post"/>
     @endforeach
