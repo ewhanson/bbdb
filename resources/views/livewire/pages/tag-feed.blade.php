@@ -4,9 +4,10 @@
         <x-photo-card wire:key="{{ $post->id }}" :post="$post"/>
     @endforeach
     @if(!$isLastPage)
-        <button wire:click="loadMore" class="btn btn-outline btn-sm">
-            Load more photos
-        </button>
+        <div x-intersect.threshold.80="$wire.loadMore()">Scroll to load more 👇</div>
+        {{--        <button wire:click="loadMore" class="btn btn-outline btn-sm">--}}
+        {{--            Load more photos--}}
+        {{--        </button>--}}
     @endif
     <div wire:loading wire:target="loadMore">
         <span class="loading loading-dots loading-sm"></span>
