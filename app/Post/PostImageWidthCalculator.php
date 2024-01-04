@@ -26,24 +26,29 @@ class PostImageWidthCalculator implements WidthCalculator
         $targetWidths = collect();
 
         $targetWidths->push($width);
+        $targetWidths->push(1280);
+        $targetWidths->push(256);
+        $targetWidths->push(180);
 
-        $ratio = $height / $width;
-        $area = $height * $width;
-
-        $predictedFileSize = $fileSize;
-        $pixelPrice = $predictedFileSize / $area;
-
-        while (true) {
-            $predictedFileSize *= 0.7;
-
-            $newWidth = (int) floor(sqrt(($predictedFileSize / $pixelPrice) / $ratio));
-
-            if ($this->finishedCalculating((int) $predictedFileSize, $newWidth)) {
-                return $targetWidths;
-            }
-
-            $targetWidths->push($newWidth);
-        }
+        return $targetWidths;
+        //
+        //        $ratio = $height / $width;
+        //        $area = $height * $width;
+        //
+        //        $predictedFileSize = $fileSize;
+        //        $pixelPrice = $predictedFileSize / $area;
+        //
+        //        while (true) {
+        //            $predictedFileSize *= 0.7;
+        //
+        //            $newWidth = (int) floor(sqrt(($predictedFileSize / $pixelPrice) / $ratio));
+        //
+        //            if ($this->finishedCalculating((int) $predictedFileSize, $newWidth)) {
+        //                return $targetWidths;
+        //            }
+        //
+        //            $targetWidths->push($newWidth);
+        //        }
     }
 
     protected function finishedCalculating(int $predictedFileSize, int $newWidth): bool
