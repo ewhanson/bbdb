@@ -30,7 +30,7 @@ class Post extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'date_taken' => 'date',
+        'date_taken' => 'datetime',
     ];
 
     protected $dispatchesEvents = [
