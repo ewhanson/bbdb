@@ -13,6 +13,8 @@ class EditPost extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('view')
+                ->url(fn (): string => route('single-photo', ['post' => $this->record]), true),
             Actions\DeleteAction::make(),
         ];
     }
