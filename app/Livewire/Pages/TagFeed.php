@@ -28,7 +28,7 @@ class TagFeed extends Component
 
             return;
         }
-        $results = Post::withAnyTags([$tag->name])->paginate(10, ['*'], 'page', $this->page);
+        $results = Post::withAnyTags([$tag->name])->orderByDesc('date_taken')->paginate(10, ['*'], 'page', $this->page);
         $this->isLastPage = $results->onLastPage();
         $this->posts = $results->items();
         $this->tagName = $tag->name;
@@ -37,7 +37,7 @@ class TagFeed extends Component
     public function loadMore()
     {
         $this->page++;
-        $results = Post::withAnyTags([$this->tagName])->paginate(10, ['*'], 'page', $this->page);
+        $results = Post::withAnyTags([$this->tagName])->orderBy('date_taken')->paginate(10, ['*'], 'page', $this->page);
         $this->isLastPage = $results->onLastPage();
         $this->posts = array_merge($this->posts, $results->items());
     }

@@ -15,7 +15,7 @@ class Feed extends Component
 
     public function mount()
     {
-        $results = Post::paginate(10, ['*'], 'page', $this->page);
+        $results = Post::orderByDesc('date_taken')->paginate(10, ['*'], 'page', $this->page);
         $this->isLastPage = $results->onLastPage();
         $this->posts = $results->items();
     }
@@ -23,7 +23,7 @@ class Feed extends Component
     public function loadMore()
     {
         $this->page++;
-        $results = Post::paginate(10, ['*'], 'page', $this->page);
+        $results = Post::orderByDesc('date_taken')->paginate(10, ['*'], 'page', $this->page);
         $this->isLastPage = $results->onLastPage();
         $this->posts = array_merge($this->posts, $results->items());
     }
