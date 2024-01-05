@@ -57,12 +57,9 @@ class PostResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\SpatieTagsColumn::make('tags'),
             ])
+            ->defaultSort('date_taken', 'desc')
             ->filters([
                 //
             ])
