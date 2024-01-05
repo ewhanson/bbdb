@@ -25,7 +25,8 @@ class PostImageWidthCalculator implements WidthCalculator
     {
         $targetWidths = collect();
 
-        $targetWidths->push($width);
+        // Removed for now
+        // $targetWidths->push($width);
         $targetWidths->push(1280);
         $targetWidths->push(256);
         $targetWidths->push(180);
