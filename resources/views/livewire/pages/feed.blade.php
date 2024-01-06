@@ -3,10 +3,10 @@
         🤷 Oops... No photos found
     @endif
     @foreach($posts as $post)
-        <x-photo-card wire:key="{{ $post->id }}" :post="$post"/>
+            <x-photo-card wire:key="post-{{ $post->id }}" :post="$post"/>
     @endforeach
     @if(!$isLastPage)
-            <div x-intersect.threshold.80="$wire.loadMore()">Scroll to load more 👇</div>
+            <div x-intersect="$wire.loadMore()">Scroll to load more 👇</div>
             {{--        <button wire:click="loadMore" class="btn btn-outline btn-sm">--}}
             {{--            Load more photos--}}
             {{--        </button>--}}

@@ -8,7 +8,7 @@
                     family. Already have an access code? Login by clicking the button
                     below!
                 </p>
-                <a href="/login" wire:navigate class="btn btn-primary">
+                <a href="{{ route('login') }}" wire:navigate class="btn btn-primary">
                     Start viewing
                 </a>
             </div>

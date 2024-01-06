@@ -2,10 +2,10 @@
     <div class="flex-1">
         <a
             @auth
-                href="/feed"
+                href="{{ route('feed') }}"
             @endauth
             @guest
-                href="/"
+                href="{{ route('landing') }}"
             @endguest
             wire:navigate
             class="btn btn-ghost normal-case text-xl"
@@ -33,7 +33,7 @@
             >
                 @auth
                     <li>
-                        <a class="justify-between" href="/feed" wire:navigate>
+                        <a class="justify-between" href="{{ route('feed') }}" wire:navigate>
                             Photo feed
                             @if($hasNewPhotos)
                                 <span class="badge badge-secondary badge-sm">
@@ -44,10 +44,10 @@
                     </li>
                 @endauth
                 <li>
-                    <a href="/about" wire:navigate>About</a>
+                    <a href="{{ route('about') }}" wire:navigate>About</a>
                 </li>
                 <li>
-                    <a href="/whats-new" wire:navigate class="justify-between">
+                    <a href="{{ route('whats-new') }}" wire:navigate class="justify-between">
                         What's new
                         @if($lastUpdateOlderThanOneWeek)
                             <span class="badge badge-secondary badge-sm">
@@ -58,7 +58,7 @@
                 </li>
                 @auth
                     <li>
-                        <a href="/signup" wire:navigate>
+                        <a href="{{ route('signup') }}" wire:navigate>
                             Notifications signup
                         </a>
                     </li>
@@ -73,7 +73,7 @@
                         <button type="button" wire:click="logout">Logout</button>
                     @endauth
                     @guest
-                        <a href="/login" wire:navigate>Login</a>
+                            <a href="{{ route('login') }}" wire:navigate>Login</a>
                     @endguest
                 </li>
             </ul>

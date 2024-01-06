@@ -1,7 +1,7 @@
 <div class="card card-compact bg-base-100 w-full sm:w-auto sm:max-w-md shadow-xl">
     {{-- TODO: See if custom class "min-w-28rem" is best approach --}}
     <figure class="sm:min-w-28rem">
-        {{ $post->getFirstMedia()->img()->attributes(['class' => 'object-contain', 'alt' => "Shows $post->description"])->lazy() }}
+        {{ $post->getFirstMedia()->img()->attributes(['id' => $uuid, 'class' => 'object-contain', 'alt' => "Shows $post->description"]) }}
     </figure>
     <div class="card-body">
         <div class="card-actions justify-end">

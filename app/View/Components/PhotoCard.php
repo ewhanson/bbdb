@@ -6,6 +6,7 @@ use App\Models\Post;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 use Livewire\Attributes\Locked;
 
@@ -36,6 +37,8 @@ class PhotoCard extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.photo-card');
+        return view('components.photo-card')->with([
+            'uuid' => Str::uuid(),
+        ]);
     }
 }
