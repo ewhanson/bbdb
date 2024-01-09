@@ -42,7 +42,7 @@ class PbImporter extends Command
             info('Good choice, boyo.');
         } else {
             info('Fine. Importing the stuff...');
-            $this->apiToken = env('BABYGRAMZ_TOKEN');
+            $this->apiToken = config('babygramz_token');
 
             $postCount = spin(
                 fn () => $this->importPosts($this->option('count')),
