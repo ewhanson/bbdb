@@ -14,6 +14,4 @@
             </div>
         </div>
     </main>
-
-    <livewire:footer/>
 </div>
