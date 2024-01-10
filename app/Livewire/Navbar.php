@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Livewire\Pages\Landing;
 use App\Models\PostStatus;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class Navbar extends Component
@@ -19,7 +20,7 @@ class Navbar extends Component
         return view('livewire.navbar')
             ->with([
                 'hasNewPhotos' => $this->hasNewPhotos(),
-                'lastUpdateOlderThanOneWeek' => $this->lastUpdateOlderThanOneWeek(),
+                'hasRecentSiteUpdates' => $this->hasRecentSiteUpdates(),
             ]);
     }
 
@@ -28,9 +29,8 @@ class Navbar extends Component
         return PostStatus::all()->count() > 0;
     }
 
-    private function lastUpdateOlderThanOneWeek(): bool
+    private function hasRecentSiteUpdates(): bool
     {
-        // TODO: Implement
-        return false;
+        return now()->subWeek()->lt(new Carbon(config('app.last_updated')));
     }
 }

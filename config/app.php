@@ -186,6 +186,6 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
-    'babygramz_token' => env('BABYGRAMZ_TOKEN')
-
+    'babygramz_token' => env('BABYGRAMZ_TOKEN'),
+    'last_updated' => env('LAST_UPDATED'),
 ];

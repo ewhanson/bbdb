@@ -49,7 +49,7 @@
                 <li>
                     <a href="{{ route('whats-new') }}" wire:navigate class="justify-between">
                         What's new
-                        @if($lastUpdateOlderThanOneWeek)
+                        @if($hasRecentSiteUpdates)
                             <span class="badge badge-secondary badge-sm">
                                 updated
                               </span>

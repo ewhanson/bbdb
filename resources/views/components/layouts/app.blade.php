@@ -14,6 +14,6 @@
 <body>
 <livewire:navbar/>
 {{ $slot }}
-<livewire:footer/>
+<x-footer/>
 </body>
 </html>
