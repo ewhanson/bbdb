@@ -17,9 +17,11 @@
     <div class="flex-none">
         <div class="dropdown dropdown-end">
             <div class="indicator">
-                @if($hasNewPhotos)
+                @auth()
+                    @if($hasNewPhotos || $hasRecentSiteUpdates)
                     <div class="badge badge-secondary badge-xs indicator-item mt-1 mr-1"></div>
                 @endif
+                @endauth
                 <label tabIndex="0" class="btn btn-square btn-ghost">
                     <div>
                         <x-custom-icon type="horizontalDots"/>
