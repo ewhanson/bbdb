@@ -1,3 +1,42 @@
 <x-main-content-layout>
-    ✅ TODO: Add what's new
+    <article class="prose">
+        <h1>What's new</h1>
+
+        <h2>2024-01-16</h2>
+        <p>New year, new tech stack!</p>
+        <p>The internals of Babygramz has been completely rewritten to be better than ever. I've moved away from
+            <a href="https://preactjs.com/" target="_blank" rel="noopener noreferrer">Preact</a> and <a
+                href="https://pocketbase.io/" target="_blank" rel="noopener noreferrer">Pocketbase</a> and moved
+            things over to <a href="https://laravel.com/" target="_blank" rel="noopener noreferrer">Laravel</a>. Not
+            much should have changed from a user's perspective,
+            but it sets things up for exciting changes in the future!</p>
+
+        <h2>2023-06-19</h2>
+        <p>The biggest Babygramz update yet!</p>
+        <p>A lot went into making sure the app continues to be maintainable and extensible over time, but I was also
+            able to add a number of user-facing features that had been on my mind for a while, so without further
+            ado:</p>
+        <ul>
+            <li>This "what's new" page. Incremental changes made over time can be hard to track and notice. I wanted to
+                add an update log to keep track of what I've done, what's new, and provide a way for others to see the
+                recent changes as well.
+            </li>
+            <li>New photos now have a "new" badge that will show up on any new photos for a week or until the next batch
+                of new photos are uploaded.
+            </li>
+            <li>A more robust way of tracking new photos/queueing new photo emails. The previous method was a bit flaky
+                and made it difficult to reliably trigger new photo notifications when anything else went wrong (like
+                restarting the computer...). That should be a thing of the past now.
+            </li>
+            <li>Tags! Tags can now be added to group and categorizes photos. The tags are visible beneath the photo
+                description, and each tag has its own dedicated page where all photos with that tag can be viewed
+                together.
+            </li>
+            <li>Update badges on the dropdown menu. These serve as an additional visual indicator when there's something
+                new (whether it be an update here in the "What's new" section or new photos being added). Still an early
+                idea so I'll have to see how it goes and whether it's intrusive or not.
+            </li>
+        </ul>
+    </article>
+
 </x-main-content-layout>
