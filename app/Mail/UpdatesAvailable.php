@@ -30,7 +30,7 @@ class UpdatesAvailable extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Update: 📸 '.$this->newPostCount.'new '.$this->getPhotoNoun().' available',
+            subject: 'Update: 📸 '.$this->newPostCount.' new '.$this->getPhotoNoun().' available',
         );
     }
 
