@@ -6,8 +6,8 @@
     <meta name="robots" content="noindex"/>
     <link rel="icon" type="image/svg+xml" href="/baby.svg"/>
 
-    @livewireStyles
-    @vite(['resources/js/app.js'])
+    {{--    @livewireStyles--}}
+    {{--    @vite(['resources/js/app.js'])--}}
 
     <title>{{ $title ?? 'Babygramz' }}</title>
 
@@ -19,6 +19,6 @@
 {{ $slot }}
 <x-footer/>
 
-@livewireScriptConfig
+{{--@livewireScriptConfig--}}
 </body>
 </html>
