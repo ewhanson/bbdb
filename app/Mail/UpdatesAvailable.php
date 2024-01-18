@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 
 class UpdatesAvailable extends Mailable implements ShouldQueue
@@ -31,6 +32,15 @@ class UpdatesAvailable extends Mailable implements ShouldQueue
     {
         return new Envelope(
             subject: 'Update: 📸 '.$this->newPostCount.' new '.$this->getPhotoNoun().' available',
+        );
+    }
+
+    public function headers(): Headers
+    {
+        return new Headers(
+            text: [
+                'X-PM-Message-Stream' => 'outbound',
+            ]
         );
     }
 

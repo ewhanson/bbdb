@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 
 class NotificationsSignup extends Mailable
@@ -28,7 +29,16 @@ class NotificationsSignup extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '📫 Welcome to Babygramz',
+            subject: '📫 Welcome to Babygramz'
+        );
+    }
+
+    public function headers(): Headers
+    {
+        return new Headers(
+            text: [
+                'X-PM-Message-Stream' => 'outbound',
+            ]
         );
     }
 
