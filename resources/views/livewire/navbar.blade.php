@@ -18,7 +18,7 @@
         <div class="dropdown dropdown-end">
             <div class="indicator">
                 @auth()
-                    @if($hasNewPhotos || $hasRecentSiteUpdates)
+                    @if(($hasNewPhotos || $hasRecentSiteUpdates))
                     <div class="badge badge-secondary badge-xs indicator-item mt-1 mr-1"></div>
                 @endif
                 @endauth
