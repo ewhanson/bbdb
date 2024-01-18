@@ -6,6 +6,9 @@
     <meta name="robots" content="noindex"/>
     <link rel="icon" type="image/svg+xml" href="/baby.svg"/>
 
+    @livewireStyles
+    @vite(['resources/js/app.js'])
+
     <title>{{ $title ?? 'Babygramz' }}</title>
 
     <!-- Styles -->
@@ -15,5 +18,7 @@
 <livewire:navbar/>
 {{ $slot }}
 <x-footer/>
+
+@livewireScriptConfig
 </body>
 </html>
