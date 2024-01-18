@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
         if (app()->environment('production')) {
             $url->forceScheme('https');
         }
+
+        Livewire::setScriptRoute(function ($handle) {
+            return Route::get('/vendor/livewire/livewire.js', $handle);
+        });
     }
 }
