@@ -2,7 +2,7 @@
     <article class="prose">
         <h1>What's new</h1>
 
-        <h2>2024-01-16</h2>
+        <h2>2024-01-18</h2>
         <p>New year, new tech stack!</p>
         <p>The internals of Babygramz has been completely rewritten to be better than ever. I've moved away from
             <a href="https://preactjs.com/" target="_blank" rel="noopener noreferrer">Preact</a> and <a
