@@ -18,6 +18,7 @@ Route::get('/login', \App\Livewire\Pages\Login::class)->name('login');
 Route::get('/about', \App\Livewire\Pages\About::class)->name('about');
 Route::get('whats-new', \App\Livewire\Pages\WhatsNew::class)->name('whats-new');
 Route::get('/feed', \App\Livewire\Pages\Feed::class)->name('feed')->middleware('auth:web');
+Route::get('/feed/new', \App\Livewire\Pages\NewFeed::class)->name('new-feed')->middleware('auth:web');
 Route::get('photos/{post}', \App\Livewire\Pages\SinglePhoto::class)->name('single-photo')->middleware('auth:web');
 Route::get('tags/{slug}', \App\Livewire\Pages\TagFeed::class)->name('tag')->middleware('auth:web');
 Route::get('/signup', \App\Livewire\Pages\NotificationsSignup::class)->name('signup')->middleware('auth:web');
