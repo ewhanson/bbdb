@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\PostCreated;
 use App\Events\SubscriberCreated;
 use App\Listeners\MakePostStatus;
+use App\Listeners\SendAdminNewSubscriberNotification;
 use App\Listeners\SendNotificationsSignupEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -26,6 +27,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         SubscriberCreated::class => [
             SendNotificationsSignupEmail::class,
+            SendAdminNewSubscriberNotification::class,
         ],
     ];
 
