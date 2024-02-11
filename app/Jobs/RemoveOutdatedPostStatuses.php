@@ -26,7 +26,7 @@ class RemoveOutdatedPostStatuses implements ShouldQueue
      */
     public function handle(): void
     {
-        PostStatus::whereDate('created_at', '<', now()->subWeek()->startOfDay()->toDateTimeString())
+        PostStatus::whereDate('created_at', '<', now()->subDays(3)->startOfDay()->toDateTimeString())
             ->where('notification_sent', '=', 1)
             ->delete();
     }
