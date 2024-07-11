@@ -17,6 +17,7 @@ class Login extends Component
         $this->validate();
 
         if (Auth::attempt([
+            // TODO: Remove hard-coding of babygramz.com domain
             'email' => $this->password.'.user@babygramz.com',
             'password' => $this->password,
         ])) {
