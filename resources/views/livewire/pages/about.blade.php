@@ -4,8 +4,9 @@
         <p>
             Thanks for visiting! Babygramz is a digital scrapbook for sharing
             photos with friends and family—a <a href="https://www.robinsloan.com/notes/home-cooked-app/"
-                                                target="_blank">home-cooked app</a> . It allows you to create a
-            password-protected photo feed with the ethos of a physical scrapbook
+                                                target="_blank">
+                home-cooked app</a>. It allows you to create a password-protected photo feed with the ethos of a
+            physical scrapbook
             and feel of a modern social media app.
         </p>
         <p>
