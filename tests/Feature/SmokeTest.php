@@ -13,5 +13,5 @@ describe('unauthenticated smoke test', function () {
 });
 
 describe('authenticated smoke test', function () {
-    todo('Create auth tests with test enviornment')->with(['/feed', '/signup']);
+    todo('Create auth tests with test environment')->with(['/feed', '/signup']);
 });
